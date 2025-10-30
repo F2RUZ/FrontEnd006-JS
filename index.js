@@ -1,54 +1,53 @@
-// var name = 25;
+// +
 
-// name = 30;
+// var num = 12;
 
-// name = "Sunnat";
+// var num2 = 34;
 
-// console.log("Assalomu alaykum " + name);
+// console.log(num + num2); //additions
 
-// var age = prompt("salom yoshini kirit");
+// var name = "29";
+// var surName = "sarvar";
 
-// console.log(2025 - age + " da tugulgan ekansan");
-// var age = 25;
+// console.log(name - surName); // concat
 
-// var name = "Salom",
-//   age = 20;
+// var result = number * number2;
 
-//number
-var number = 25.2323;
+// console.log(result); // Multiplication
 
-//string
-var name = "Feruz";
+// console.log(BigInt(number ** number2)); //Devision
 
-//boolean
+// var number = 122,
+//   number2 = 34;
 
-var isOnline = false;
+// console.log(number % number2); // Modules
+// ++
 
-//null
+// var num = 1;
 
-var bagage = null;
+// // num++; //increment
 
-//udefind
+// num--; // decrement
 
-var grade = undefined;
+// // console.log(num);
 
-var surName;
+// var number = 12.53;
 
-//symbol
+// // console.log(Math.ceil(number)); // tepa tomonga yaxlitlab beradi
+// // console.log(Math.floor(number)); // past tomonga
 
-var belgi = Symbol("A132423423");
+// // console.log(Math.round(number)); // eng yaqin butun songa
 
-// Bigint
+// console.log(Math.round(Math.random() * 100));
 
-var num = 334534534534534534534534534534534534534534n;
+// var number = 12.2;
 
-var num2 = BigInt(32432432423423423423423423423n);
+// console.log(number.toFixed(0));
 
-console.log(typeof num);
+// var age = prompt("Enter your age") - 0;
 
-// alert('salom hammaga')
+// console.log(age);
 
-// var oldAge = +prompt("Yoshini kirit");
-// console.log(typeof oldAge);
-// var age = 23;
-// console.log(typeof age);
+// var numeral = "salom";
+
+// console.log(numeral);
