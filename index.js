@@ -1,54 +1,61 @@
-// var name = 25;
+// var name = `Sunnat`;
+// console.log(name);
 
-// name = 30;
+// var name = "g'ayrat"
 
-// name = "Sunnat";
+// var message = `Salom ${name} `
 
-// console.log("Assalomu alaykum " + name);
+// console.log(message);
 
-// var age = prompt("salom yoshini kirit");
+// var isOnline = false; // false
+// var IsMarried = 0; // false
+// var IsMarried = -0; // false
+// var isStudent = ''; // false
 
-// console.log(2025 - age + " da tugulgan ekansan");
-// var age = 25;
+// var number = +prompt("yoshini kirt");
 
-// var name = "Salom",
-//   age = 20;
+// console.log(number);
 
-//number
-var number = 25.2323;
+// var number = 1234;
 
-//string
-var name = "Feruz";
+// var result = String(number);// string to number
+// console.log( typeof result);
 
-//boolean
+// var number = 0;
+// var result = Boolean(number); // number. to boolean
 
-var isOnline = false;
+// console.log( result);
 
-//null
+// var isOnline = true;
 
-var bagage = null;
+// var result = Number(isOnline) -1 // boolean to number
+// console.log( typeof result);
 
-//udefind
+// type coercions
 
-var grade = undefined;
+// console.log("222" + 12);
 
-var surName;
+// let name = "sunnat";
 
-//symbol
+// // console.log(name);
+// let name = "Abdullayev";
 
-var belgi = Symbol("A132423423");
+// name = "Salomov";
 
-// Bigint
+// console.log(name);
 
-var num = 334534534534534534534534534534534534534534n;
+//const
 
-var num2 = BigInt(32432432423423423423423423423n);
+// const name = "Xasan";
 
-console.log(typeof num);
+// name = "Xusan";
 
-// alert('salom hammaga')
+// console.log(name);
 
-// var oldAge = +prompt("Yoshini kirit");
-// console.log(typeof oldAge);
-// var age = 23;
-// console.log(typeof age);
+// var surName = "Salomov";
+// let surName = "Alomov";
+
+// console.log(surName);
+
+
+// const let var
