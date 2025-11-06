@@ -1,54 +1,37 @@
-// var name = 25;
+//string methods
 
-// name = 30;
+//toUppsercase
 
-// name = "Sunnat";
+// const oldName = "  SUNNATN  ";
+// const sub = "JON";
 
-// console.log("Assalomu alaykum " + name);
+// const result = oldName.toUpperCase();
 
-// var age = prompt("salom yoshini kirit");
+// const result = oldName.toLowerCase();
 
-// console.log(2025 - age + " da tugulgan ekansan");
-// var age = 25;
+// const result = oldName.slice(5, 10);
 
-// var name = "Salom",
-//   age = 20;
+// const result = oldName.concat(sub, sub, sub);
 
-//number
-var number = 25.2323;
+// const result = oldName.charAt(3);
 
-//string
-var name = "Feruz";
+// const result = oldName.charCodeAt(0);
 
-//boolean
+// const result = oldName.length;
 
-var isOnline = false;
+// const result = oldName.indexOf("N");
 
-//null
+// const result = oldName.lastIndexOf("N");
 
-var bagage = null;
+// const result = oldName.length;
+// const newResult = oldName.trim().length;
 
-//udefind
+// const result = oldName.trimStart().length
 
-var grade = undefined;
+// const result = oldName.trimEnd().length;
 
-var surName;
+// console.log(result);
+// console.log(newResult);
 
-//symbol
-
-var belgi = Symbol("A132423423");
-
-// Bigint
-
-var num = 334534534534534534534534534534534534534534n;
-
-var num2 = BigInt(32432432423423423423423423423n);
-
-console.log(typeof num);
-
-// alert('salom hammaga')
-
-// var oldAge = +prompt("Yoshini kirit");
-// console.log(typeof oldAge);
-// var age = 23;
-// console.log(typeof age);
+// const result = oldName.split('').reverse().join()
+// console.log(result);
