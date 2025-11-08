@@ -1,54 +1,46 @@
-// var name = 25;
+// const elTitle = document.getElementsByTagName("h1")[0];
+// const elSubTitle = document.getElementsByClassName("subtitle")[0];
+// const elTitle = document.getElementById("subtitle");
 
-// name = 30;
+// const title = document.querySelector("#subtitle");
+// console.log(title);
 
-// name = "Sunnat";
+// const text = document.querySelectorAll("h1")[]
 
-// console.log("Assalomu alaykum " + name);
+// // text.textContent = "Sunnat";
+// text.textContent = "<i>Salom hammaga</i>";
+// text.style.cssText = `
+//   font-size: 40px;
+//   background-color: red;
+//   text-decoration: line-through;
+// `;
+// console.log(text);
 
-// var age = prompt("salom yoshini kirit");
+// const elForm = document.querySelector(".form");
+// const elName = document.querySelector(".name");
+// const elPasswd = document.querySelector(".passwd");
+// elForm.addEventListener("submit", (e) => {
+//   e.preventDefault();
 
-// console.log(2025 - age + " da tugulgan ekansan");
-// var age = 25;
+//   const nameValue = elName.value.trim();
+//   const passwdValue = elPasswd.value.trim();
 
-// var name = "Salom",
-//   age = 20;
+//   if (!nameValue || !passwdValue) {
+//     return alert("Bosh maydon");
+//   } else {
+//     alert("Successffulll validation");
+//     window.location.href = "https://chatgpt.com/";
+//   }
+// });
 
-//number
-var number = 25.2323;
+//submit , click , dblclick , mouseover load , readystatechange , scrol ,
 
-//string
-var name = "Feruz";
+// const elBtn = document.querySelector(".click");
 
-//boolean
+// elBtn.addEventListener("dblclick", () => {
+//   alert("Salom Azamat");
+// });
 
-var isOnline = false;
-
-//null
-
-var bagage = null;
-
-//udefind
-
-var grade = undefined;
-
-var surName;
-
-//symbol
-
-var belgi = Symbol("A132423423");
-
-// Bigint
-
-var num = 334534534534534534534534534534534534534534n;
-
-var num2 = BigInt(32432432423423423423423423423n);
-
-console.log(typeof num);
-
-// alert('salom hammaga')
-
-// var oldAge = +prompt("Yoshini kirit");
-// console.log(typeof oldAge);
-// var age = 23;
-// console.log(typeof age);
+// window.addEventListener("keyup", (feruz) => {
+//   console.log(feruz);
+// });
