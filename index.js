@@ -1,46 +1,63 @@
-// const elTitle = document.getElementsByTagName("h1")[0];
-// const elSubTitle = document.getElementsByClassName("subtitle")[0];
-// const elTitle = document.getElementById("subtitle");
+//declarations function
 
-// const title = document.querySelector("#subtitle");
-// console.log(title);
+// function sayHello() {
+//   console.log("Salom hammaga");
+// }
 
-// const text = document.querySelectorAll("h1")[]
+// sayHello();
 
-// // text.textContent = "Sunnat";
-// text.textContent = "<i>Salom hammaga</i>";
-// text.style.cssText = `
-//   font-size: 40px;
-//   background-color: red;
-//   text-decoration: line-through;
-// `;
-// console.log(text);
+//expressions
 
-// const elForm = document.querySelector(".form");
-// const elName = document.querySelector(".name");
-// const elPasswd = document.querySelector(".passwd");
-// elForm.addEventListener("submit", (e) => {
-//   e.preventDefault();
+// const sayHello = function () {
+//   console.log("Salom");
+// };
 
-//   const nameValue = elName.value.trim();
-//   const passwdValue = elPasswd.value.trim();
+// sayHello();
 
-//   if (!nameValue || !passwdValue) {
-//     return alert("Bosh maydon");
-//   } else {
-//     alert("Successffulll validation");
-//     window.location.href = "https://chatgpt.com/";
-//   }
-// });
+//Arrow =>
 
-//submit , click , dblclick , mouseover load , readystatechange , scrol ,
+// const sayHello = () => {
+//   console.log("Salom ");
+// };
 
-// const elBtn = document.querySelector(".click");
+// sayHello();
+// function sayHello() {
+//   console.log("Salom");
+// }
 
-// elBtn.addEventListener("dblclick", () => {
-//   alert("Salom Azamat");
-// });
+// const sayHello = () => console.log("salom");
 
-// window.addEventListener("keyup", (feruz) => {
-//   console.log(feruz);
-// });
+// sayHello();
+
+// function plus(a, b) {
+//   return a + b;
+// }
+
+// const reslult = plus(12, 34);
+// console.log(reslult);
+
+// const son1 = +prompt("Son kirit1");
+// const son2 = +prompt("Son kirit2");
+
+// const multi = (a, b) => console.log(a * b);
+
+// multi(son1, son2);
+
+// function Salom() {
+//   return;
+// }
+
+// const Salom = function () {};
+
+// () => {};
+
+// = , == , ===
+
+// const name = "20";
+
+// console.log(name != 20);
+
+const age = "20";
+const oldAge = "20";
+
+console.log(age === oldAge);
