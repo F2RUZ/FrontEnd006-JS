@@ -57,7 +57,7 @@
 
 // console.log(name != 20);
 
-const age = "20";
-const oldAge = "20";
+// const age = "20";
+// const oldAge = "20";
 
-console.log(age === oldAge);
+// console.log(age === oldAge);
