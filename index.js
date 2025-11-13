@@ -1,63 +1,35 @@
-//declarations function
+// let number = 0;
 
-// function sayHello() {
-//   console.log("Salom hammaga");
+// while (number <= 10) {
+//   number++;
+//   console.log(number);
 // }
 
-// sayHello();
+// var start = 0;
 
-//expressions
+// do {
+//   if (start % 2 !== 0) {
+//     console.log(start);
+//   }
+//   start++;
+// } while (start < 100);
 
-// const sayHello = function () {
-//   console.log("Salom");
-// };
+// var number = 0;
+// for (var i = 0; i < 3; i++) {
 
-// sayHello();
+//   console.log(number++);
 
-//Arrow =>
+// }
+// // 1 2
 
-// const sayHello = () => {
-//   console.log("Salom ");
-// };
+// let num = 0;
 
-// sayHello();
-// function sayHello() {
-//   console.log("Salom");
+// for (let i = 0; i < 3; i++) {
+//   console.log(num++);
 // }
 
-// const sayHello = () => console.log("salom");
+// const numberrr = 0;
 
-// sayHello();
-
-// function plus(a, b) {
-//   return a + b;
+// for (const i = 0; i < 3; i++) {
+//   console.log(numberrr++);
 // }
-
-// const reslult = plus(12, 34);
-// console.log(reslult);
-
-// const son1 = +prompt("Son kirit1");
-// const son2 = +prompt("Son kirit2");
-
-// const multi = (a, b) => console.log(a * b);
-
-// multi(son1, son2);
-
-// function Salom() {
-//   return;
-// }
-
-// const Salom = function () {};
-
-// () => {};
-
-// = , == , ===
-
-// const name = "20";
-
-// console.log(name != 20);
-
-// const age = "20";
-// const oldAge = "20";
-
-// console.log(age === oldAge);
