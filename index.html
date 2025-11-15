@@ -1,24 +1,593 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Mini Profile Dashboard</title>
+    <meta
+      name="description"
+      content="O'quvchi uchun Mini Profile Dashboard - HTML, SCSS, JS amaliy loyiha"
+    />
 
-    <style></style>
+    <!--
+    SCSS (original, for learning). Save as styles.scss if you want to edit.
+
+    .page {
+      &__container { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+      &__header { display:flex; justify-content:space-between; align-items:center; padding:12px 0; }
+      &__nav { display:flex; gap:12px; }
+    }
+
+    .card { background:#fff; border-radius:12px; padding:18px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+
+    .profile { &__form { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+               &__field { display:flex; flex-direction:column; }
+               &__actions { grid-column:1/-1; display:flex; gap:12px; justify-content:flex-end; }
+    }
+
+    // responsive
+    @media (max-width:375px) { .profile__form { grid-template-columns:1fr; } }
+  -->
+
+    <style>
+      /* Compiled CSS (from the SCSS above) - BEM classes used throughout */
+      :root {
+        --bg: #f3f7fb;
+        --card: #ffffff;
+        --accent: #4f46e5;
+        --muted: #6b7280;
+        --radius: 12px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial;
+        line-height: 1.4;
+        margin: 0;
+        background: var(--bg);
+        color: #111;
+      }
+
+      .page__container {
+        max-width: 900px;
+        margin: 28px auto;
+        padding: 0 18px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+      }
+      .header__logo {
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--accent);
+      }
+      .header__nav {
+        display: flex;
+        gap: 14px;
+      }
+      .header__nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .header__nav a:hover {
+        text-decoration: underline;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 18px;
+        margin-top: 18px;
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+      }
+
+      /* Profile form block */
+      .profile {
+      }
+      .profile__title {
+        margin: 0 0 12px 0;
+        font-size: 18px;
+      }
+
+      .profile__form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .profile__field {
+        display: flex;
+        flex-direction: column;
+      }
+      .profile__label {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .profile__input {
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #e6e9ef;
+        font-size: 14px;
+      }
+      .profile__textarea {
+        min-height: 76px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #e6e9ef;
+        font-size: 14px;
+        resize: vertical;
+      }
+
+      .profile__actions {
+        grid-column: 1/-1;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+      .btn {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 0;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .btn--primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn--ghost {
+        background: transparent;
+        border: 1px solid #e6e9ef;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      /* Result box */
+      .result__title {
+        margin: 0 0 12px 0;
+        font-size: 18px;
+      }
+      .result__item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px dashed #eef2ff;
+      }
+      .result__item:last-child {
+        border-bottom: none;
+      }
+      .result__value {
+        font-weight: 600;
+      }
+
+      /* small responsive */
+      @media (max-width: 800px) {
+        .layout {
+          grid-template-columns: 1fr 320px;
+        }
+      }
+      @media (max-width: 575px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .profile__form {
+          grid-template-columns: 1fr;
+        }
+        .profile__actions {
+          justify-content: stretch;
+        }
+      }
+
+      footer {
+        margin: 18px 0 40px 0;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* Error */
+      .is-invalid {
+        border-color: #f43f5e;
+      }
+      .error-message {
+        color: #f43f5e;
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      /* subtle helpers */
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+    </style>
   </head>
   <body>
-    <!-- <form class="form">
-      <input class="name" type="text" placeholder="Write some text" />
-      <input type="password" class="passwd" placeholder="Write some strong passwd" />
+    <div class="page__container">
+      <header class="header">
+        <div class="header__logo">MiniProfile</div>
+        <nav class="header__nav" aria-label="main navigation">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </header>
 
-      <button type="submit">Submit</button>
-    </form> -->
+      <main class="layout">
+        <!-- left: form -->
+        <section class="card profile" aria-labelledby="profile-heading">
+          <h2 id="profile-heading" class="profile__title">Profile Form</h2>
 
-    <noscript>Java script disebled!</noscript>
+          <form id="profileForm" class="profile__form" novalidate>
+            <div class="profile__field">
+              <label class="profile__label" for="fullName">To'liq ism</label>
+              <input
+                class="profile__input"
+                id="fullName"
+                name="fullName"
+                placeholder="Ali Vali"
+                required
+              />
+              <div
+                id="nameError"
+                class="error-message"
+                style="display: none"
+              ></div>
+            </div>
 
-    <button class="click">Click</button>
+            <div class="profile__field">
+              <label class="profile__label" for="birthYear"
+                >Tug'ilgan yil</label
+              >
+              <input
+                class="profile__input"
+                id="birthYear"
+                name="birthYear"
+                placeholder="1990"
+              />
+              <div
+                id="yearError"
+                class="error-message"
+                style="display: none"
+              ></div>
+            </div>
 
-    <script src="./index.js "></script>
+            <div class="profile__field">
+              <label class="profile__label" for="ageInput"
+                >Yosh (ixtiyoriy)
+              </label>
+              <input
+                class="profile__input"
+                id="ageInput"
+                name="ageInput"
+                placeholder="Agar bor bo'lsa qo'ying"
+              />
+              <div class="muted">
+                Yoki tug'ilgan yilni to'ldiring — yosh avtomatik hisoblanadi.
+              </div>
+            </div>
+
+            <div class="profile__field">
+              <label class="profile__label" for="email">Email</label>
+              <input
+                class="profile__input"
+                id="email"
+                name="email"
+                placeholder="name@example.com"
+              />
+              <div
+                id="emailError"
+                class="error-message"
+                style="display: none"
+              ></div>
+            </div>
+
+            <div class="profile__field" style="grid-column: 1/-1">
+              <label class="profile__label" for="hobby"
+                >Hobby (qiziqishlar)</label
+              >
+              <textarea
+                id="hobby"
+                class="profile__textarea"
+                placeholder="Ex: coding, football"
+              ></textarea>
+            </div>
+
+            <div class="profile__actions">
+              <button type="button" id="clearBtn" class="btn btn--ghost">
+                Clear
+              </button>
+              <button type="button" id="saveBtn" class="btn btn--primary">
+                Save Profile
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- right: results -->
+        <aside class="card result" aria-labelledby="result-heading">
+          <h2 id="result-heading" class="result__title">Profile Result</h2>
+
+          <div class="result__item">
+            <div class="muted">Name</div>
+            <div id="resName" class="result__value">—</div>
+          </div>
+          <div class="result__item">
+            <div class="muted">Age</div>
+            <div id="resAge" class="result__value">—</div>
+          </div>
+          <div class="result__item">
+            <div class="muted">Email</div>
+            <div id="resEmail" class="result__value">—</div>
+          </div>
+          <div class="result__item">
+            <div class="muted">Hobby (repeated)</div>
+            <div id="resHobby" class="result__value">—</div>
+          </div>
+          <div class="result__item">
+            <div class="muted">Birth Year</div>
+            <div id="resYear" class="result__value">—</div>
+          </div>
+
+          <div
+            id="savedNotice"
+            class="muted"
+            style="margin-top: 12px; display: none"
+          >
+            Profil lokal saqlandi (LocalStorage)
+          </div>
+        </aside>
+      </main>
+
+      <footer class="card" style="margin-top: 18px">
+        <div id="footerText">© <span id="currentYear"></span> MiniProfile</div>
+      </footer>
+    </div>
+
+    <script>
+      // Required functions
+      function calculateAge(birthYear) {
+        const now = new Date();
+        const thisYear = now.getFullYear();
+        const by = Number(birthYear);
+        if (!Number.isFinite(by) || by <= 0) return null;
+        return thisYear - by;
+      }
+
+      function normalizeName(name) {
+        // apply many string methods as required
+        if (name === null || name === undefined) return "";
+        // trim both sides, then remove extra interior spaces
+        let s = String(name).trim();
+        s = s.replaceAll(/\s{2,}/g, " "); // collapse multiple spaces
+
+        // Make first character uppercase and rest lowercase
+        const first = s.charAt(0).toUpperCase();
+        const rest = s.slice(1).toLowerCase();
+        return first + rest;
+      }
+
+      function validateEmail(email) {
+        if (!email) return false;
+        const e = String(email).trim();
+        // simple validation: contains @ and a dot after @
+        return e.includes("@") && e.slice(e.indexOf("@")).includes(".");
+      }
+
+      // DOM refs
+      const el = {
+        fullName: document.querySelector("#fullName"),
+        birthYear: document.querySelector("#birthYear"),
+        ageInput: document.querySelector("#ageInput"),
+        email: document.querySelector("#email"),
+        hobby: document.querySelector("#hobby"),
+        saveBtn: document.querySelector("#saveBtn"),
+        clearBtn: document.querySelector("#clearBtn"),
+
+        resName: document.querySelector("#resName"),
+        resAge: document.querySelector("#resAge"),
+        resEmail: document.querySelector("#resEmail"),
+        resHobby: document.querySelector("#resHobby"),
+        resYear: document.querySelector("#resYear"),
+        savedNotice: document.querySelector("#savedNotice"),
+
+        nameError: document.querySelector("#nameError"),
+        emailError: document.querySelector("#emailError"),
+        yearError: document.querySelector("#yearError"),
+        footerYear: document.querySelector("#currentYear"),
+      };
+
+      // set footer year using string methods
+      const fy = new Date().getFullYear().toString();
+      // demonstrate toUpperCase / toLowerCase even though numbers unaffected
+      el.footerYear.textContent = fy.toString();
+
+      // Load saved profile if exists (Bonus)
+      function loadFromLocal() {
+        const raw = localStorage.getItem("miniProfile");
+        if (!raw) return;
+        try {
+          const p = JSON.parse(raw);
+          el.fullName.value = p.fullName || "";
+          el.birthYear.value = p.birthYear || "";
+          el.ageInput.value = p.ageInput || "";
+          el.email.value = p.email || "";
+          el.hobby.value = p.hobby || "";
+          renderResult(p);
+          el.savedNotice.style.display = "block";
+        } catch (err) {
+          console.warn("load error", err);
+        }
+      }
+
+      function renderResult(profile) {
+        // normalize and display
+        const nm = normalizeName(profile.fullName || "");
+        el.resName.textContent = nm || "—";
+
+        // Age logic: prefer explicit ageInput, else compute from birthYear
+        let age = null;
+        if (profile.ageInput !== undefined && profile.ageInput !== "") {
+          age = Number(profile.ageInput);
+          if (!Number.isFinite(age)) age = null;
+        }
+        if (age === null) {
+          age = calculateAge(profile.birthYear);
+        }
+        el.resAge.textContent = age === null || age === undefined ? "—" : age;
+
+        el.resEmail.textContent = (profile.email || "").toLowerCase() || "—";
+
+        // hobby repeated 3 times using repeat()
+        const rawHobby = (profile.hobby || "").trim();
+        el.resHobby.textContent = rawHobby
+          ? (rawHobby + " • ").repeat(3).slice(0, -3)
+          : "—";
+
+        el.resYear.textContent = profile.birthYear || "—";
+      }
+
+      function clearErrors() {
+        el.nameError.style.display = "none";
+        el.emailError.style.display = "none";
+        el.yearError.style.display = "none";
+        el.fullName.classList.remove("is-invalid");
+        el.email.classList.remove("is-invalid");
+        el.birthYear.classList.remove("is-invalid");
+      }
+
+      // on save
+      el.saveBtn.addEventListener("click", function () {
+        clearErrors();
+
+        // gather values (shows usage of trimStart/trimEnd via JS methods)
+        const rawName = el.fullName.value.trim();
+        const rawEmail = el.email.value.trim();
+        const rawBirthYear = el.birthYear.value.trim();
+        const rawAgeInput = el.ageInput.value.trim();
+        const rawHobby = el.hobby.value.trim();
+
+        // validations (bonus)
+        let hasError = false;
+        if (rawName.length === 0) {
+          el.nameError.textContent = "Ism bo'sh bo'lishi mumkin emas";
+          el.nameError.style.display = "block";
+          el.fullName.classList.add("is-invalid");
+          hasError = true;
+        }
+
+        if (rawEmail.length > 0 && !validateEmail(rawEmail)) {
+          el.emailError.textContent = "Email noto'g'ri formatda";
+          el.emailError.style.display = "block";
+          el.email.classList.add("is-invalid");
+          hasError = true;
+        }
+
+        if (rawBirthYear.length > 0) {
+          const by = Number(rawBirthYear);
+          if (
+            !Number.isFinite(by) ||
+            by < 1900 ||
+            by > new Date().getFullYear()
+          ) {
+            el.yearError.textContent = "Tug'ilgan yil noto'g'ri";
+            el.yearError.style.display = "block";
+            el.birthYear.classList.add("is-invalid");
+            hasError = true;
+          }
+        }
+
+        if (hasError) return;
+
+        // conversions demonstrate Number()
+        const profile = {
+          fullName: rawName,
+          email: rawEmail.toLowerCase(), // toLowerCase usage
+          birthYear: rawBirthYear ? Number(rawBirthYear) : "",
+          ageInput: rawAgeInput ? Number(rawAgeInput) : "",
+          hobby: rawHobby,
+        };
+
+        // small string replace example: replaceAll - replace commas with slash for display
+        profile.hobby = profile.hobby.replaceAll(",", " ,");
+
+        // render to result box
+        renderResult(profile);
+
+        // visual feedback: temporarily change background of result box using style
+        const resultCard = document.querySelector(".result");
+        resultCard.style.transition = "background 300ms ease";
+        resultCard.style.background = "#f8fafc";
+        setTimeout(() => {
+          resultCard.style.background = "";
+        }, 350);
+
+        // save to localStorage (bonus)
+        try {
+          localStorage.setItem("miniProfile", JSON.stringify(profile));
+          el.savedNotice.style.display = "block";
+        } catch (err) {
+          console.warn("storage", err);
+        }
+      });
+
+      // Clear button
+      el.clearBtn.addEventListener("click", function () {
+        document.querySelector("#profileForm").reset();
+        clearErrors();
+        // clear result box
+        el.resName.textContent = "—";
+        el.resAge.textContent = "—";
+        el.resEmail.textContent = "—";
+        el.resHobby.textContent = "—";
+        el.resYear.textContent = "—";
+        el.savedNotice.style.display = "none";
+        // remove from localStorage
+        localStorage.removeItem("miniProfile");
+      });
+
+      // small UX: show a preview while typing -> use input event
+      el.fullName.addEventListener("input", function () {
+        // show first char capitalized live using normalizeName
+        const live = normalizeName(this.value);
+        document.querySelector("#resName").textContent = live || "—";
+      });
+
+      // demonstrate use of document.querySelector for multiple elements
+      window.addEventListener("DOMContentLoaded", function () {
+        loadFromLocal();
+      });
+
+      // Additional demonstration of string methods in the console (for student learning)
+      (function demoStringMethods() {
+        const sample = "  hello WORLD  ";
+        console.log("orig:", sample);
+        console.log("trim() ->", sample.trim());
+        console.log("trimStart() ->", sample.trimStart());
+        console.log("trimEnd() ->", sample.trimEnd());
+        console.log("toUpperCase() ->", sample.toUpperCase());
+        console.log("toLowerCase() ->", sample.toLowerCase());
+        console.log("charAt(2) ->", sample.charAt(2));
+        console.log("slice(2,7) ->", sample.slice(2, 7));
+        console.log("replace ->", sample.replace("hello", "hi"));
+        console.log("replaceAll ->", "a,a,a".replaceAll(",", ";"));
+        console.log("repeat ->", "hey".repeat(2));
+        console.log("length ->", sample.length);
+      })();
+    </script>
   </body>
 </html>
