@@ -1,86 +1,77 @@
-// if else else if
-// switch
-// ternary
-// && ||
+// const arr = [
+//   1,
+//   2,
+//   3,
+//   4,
+//   5,
+//   6,
+//   7,
+//   8,
+//   null,
+//   function sayHello() {},
+//   ["Salom", "Xayr"],
 
-// const age = +prompt("yoshini kirt ");
-//  // 15 > 18
-// if (age > 18) {
-//   alert("passport olishing mumkin");
-// } else {
-//   console.log('Hali ulgayishing kere');
+//   {
+//     name: "Umar",
+//     age: 30,
+//   },
+// ];
 
-// }
+// console.log(arr);
 
-// const age = +prompt("yoshini kirit");
+// const arr = [];
 
-// if (age > 0 && 10 >= age) {
-//   console.log("yosh bola ekansan");
-// } else if (age > 10 && 18 >= age) {
-//   console.log("O'smir bola ekansan");
-// } else if (age > 18 && 25 >= age) {
-//   console.log("Voyaga yetgan shaxs");
-// } else if (age > 25 && 60 >= age) {
-//   console.log("o'rta yoshli insonn ekansiz");
-// } else if (age > 60 && 100 >= age) {
-//   console.log("Dino ekansiz ");
-// } else {
-//   console.log("Xato  raqam kiritdingiz");
-// }
+// arr.unshift("Salom");
+// arr.unshift("Xayr");
 
-// const number = +prompt("raqam kirit");
-// switch (number) {
-//   case 1: {
-//     console.log("Yakshanba");
-//     break;
-//   }
-//   case 2: {
-//     console.log("Dushanba");
-//     break;
-//   }
-//   case 3: {
-//     console.log("seshanba");
-//     break;
-//   }
+// arr.shift();
 
-//   case 4: {
-//     console.log("Chorshanba");
-//     break;
-//   }
+// console.log(arr);
 
-//   default: {
-//     console.log("Xato raqam");
-//   }
-// }
+// const age = 23;
+// const name = "Abdulaziz";
+// console.log(arr);
 
-// const age = 20;
+// arr.push(age);
+// arr.push(name);
 
-// age > 16
-//   ? console.log("PAssport olgan ekansan") // if
-//   : console.log("PAsssport olmagan ekansiz"); //else
+// console.log(arr);
 
-// && // va
+// arr.pop();
 
-// const age = "";
-//
-// true &&  true
+// console.log(arr);
 
-// 0 + 1 => true
-// false. || true
-// age || console.log("salom");
+const studenst = ["Yusuf", "Xasan", "Xusan", "Abdulaziz"];
 
-//nested ichma ich
+// const name = "Sunnat";
 
-// const number = 12;
+// const result = name.split("").reverse().join("").toLowerCase();
 
-// if (number > 0) {
-//   console.log("musbat");
+// const result = studenst[1];x
 
-//   if (number % 2 === 0) {
-//     console.log("Juft");
-//   } else {
-//     console.log("Toq");
-//   }
-// } else {
-//   console.log("Manfiy");
-// }
+// console.log(result);
+
+// console.log(studenst.flat());
+
+// console.log(studenst.flat(4));
+
+// console.log(studenst[4]);
+
+// console.log(studenst[studenst.length - 1]);
+
+// console.log(studenst[-1]);
+
+// map()
+//filter
+//reduce
+// sort
+// find
+//finIndex
+//reverse
+//forEach()
+
+// const result = studenst.map((item, index) => {
+//   return item + "xon";
+// });
+
+// console.log(result);
