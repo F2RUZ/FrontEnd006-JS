@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
 
-  <script src="./index.js"></script>
-</body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- CRUD  -->
+
+    <form class="form">
+      <div class="input__wrapper">
+        <input
+          name="input"
+          class="todo-input"
+          type="text"
+          placeholder="write some todo"
+        />
+        <button class="add" type="submit">Add</button>
+        <button class="clearall">Clear</button>
+      </div>
+
+      <div>
+        <p class="message"></p>
+      </div>
+
+      <div class="list">
+      
+      </div>
+    </form>
+
+    <script src="./index.js"></script>
+  </body>
 </html>

@@ -1,77 +1,47 @@
-// const arr = [
-//   1,
-//   2,
-//   3,
-//   4,
-//   5,
-//   6,
-//   7,
-//   8,
-//   null,
-//   function sayHello() {},
-//   ["Salom", "Xayr"],
+const elForm = document.querySelector(".form");
+// const elInput = document.querySelector(".todo-input");
+const elMessage = document.querySelector(".message");
+const elClear = document.querySelector(".clearall");
+const elList = document.querySelector(".list");
 
-//   {
-//     name: "Umar",
-//     age: 30,
-//   },
-// ];
+//AddEvent
 
-// console.log(arr);
+elForm.addEventListener("submit", (e) => {
+  e.preventDefault(); // reload bolishini oldininoladi
 
-// const arr = [];
+  let inputValue = elForm["input"].value.trim();
 
-// arr.unshift("Salom");
-// arr.unshift("Xayr");
+  if (!inputValue) return (elMessage.textContent = "Maydonni toldir");
 
-// arr.shift();
+  elMessage.textContent = "";
+  elList.innerHTML += `
+    <div class="item">
+          <p class="todo-text">${
+            inputValue.length > 12
+              ? inputValue.slice(0, 12).concat("...")
+              : inputValue
+          }</p>
 
-// console.log(arr);
+          <div>
+            <div class="fix">
+              <div>
+                <i class="ri-calendar-line"></i>
+                <span>20.11.2025</span>
+              </div>
+              <i class="ri-check-line"></i>
+              <i class="ri-pencil-line"></i>
+              <i class="ri-delete-bin-line"></i>
+            </div>
+          </div>
+        </div>
+  
+  `;
 
-// const age = 23;
-// const name = "Abdulaziz";
-// console.log(arr);
+  elForm.reset();
+});
 
-// arr.push(age);
-// arr.push(name);
+//Clear btn
 
-// console.log(arr);
-
-// arr.pop();
-
-// console.log(arr);
-
-const studenst = ["Yusuf", "Xasan", "Xusan", "Abdulaziz"];
-
-// const name = "Sunnat";
-
-// const result = name.split("").reverse().join("").toLowerCase();
-
-// const result = studenst[1];x
-
-// console.log(result);
-
-// console.log(studenst.flat());
-
-// console.log(studenst.flat(4));
-
-// console.log(studenst[4]);
-
-// console.log(studenst[studenst.length - 1]);
-
-// console.log(studenst[-1]);
-
-// map()
-//filter
-//reduce
-// sort
-// find
-//finIndex
-//reverse
-//forEach()
-
-// const result = studenst.map((item, index) => {
-//   return item + "xon";
-// });
-
-// console.log(result);
+elClear.addEventListener("click", () => {
+  elList.innerHTML = "";
+});
