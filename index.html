@@ -1,593 +1,823 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Mini Profile Dashboard</title>
-    <meta
-      name="description"
-      content="O'quvchi uchun Mini Profile Dashboard - HTML, SCSS, JS amaliy loyiha"
-    />
-
-    <!--
-    SCSS (original, for learning). Save as styles.scss if you want to edit.
-
-    .page {
-      &__container { max-width: 900px; margin: 24px auto; padding: 0 16px; }
-      &__header { display:flex; justify-content:space-between; align-items:center; padding:12px 0; }
-      &__nav { display:flex; gap:12px; }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>To-Do Adventure Game</title>
+  <style>
+    /* Compiled CSS (SCSS style was used in design) */
+    :root{
+      --bg:#0f172a05;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --accent:#4f46e5;
+      --easy:#10b981;
+      --medium:#f59e0b;
+      --hard:#ef4444;
+      --glass: rgba(15,23,42,0.04);
+      --shadow: 0 6px 20px rgba(2,6,23,0.08);
+      --radius:12px;
+      --gap:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      padding:28px;
+      background: linear-gradient(180deg,#f8fafc 0%, #eef2ff 100%);
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
     }
 
-    .card { background:#fff; border-radius:12px; padding:18px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+    .wrap{max-width:1100px;margin:0 auto;display:grid;grid-template-columns: 1fr 360px;gap:24px;}
+    @media(max-width:900px){.wrap{grid-template-columns:1fr}}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .logo{font-weight:800;font-size:20px;color:var(--accent)}
+    nav a{margin-left:12px;color:var(--muted);text-decoration:none;font-size:14px}
 
-    .profile { &__form { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-               &__field { display:flex; flex-direction:column; }
-               &__actions { grid-column:1/-1; display:flex; gap:12px; justify-content:flex-end; }
+    .card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .game__form{display:flex;flex-direction:column;gap:10px}
+    .game__form label{font-size:13px;color:var(--muted);margin-bottom:6px;display:block}
+    .input,.select,.textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #e6e9ef;font-size:14px}
+    .textarea{min-height:80px;resize:vertical}
+    .row{display:flex;gap:10px;align-items:center}
+    .row .col{flex:1}
+    .btn{padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    .btn-primary{background:var(--accent);color:white}
+    .btn-ghost{background:transparent;border:1px solid #e6e9ef}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    .game__list{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+    .game__item{display:flex;justify-content:space-between;align-items:flex-start;padding:12px;border-radius:10px;border:1px solid #f1f5f9;background:linear-gradient(180deg,#ffffff,#fbfdff)}
+    .game__meta{font-size:13px;color:var(--muted);margin-top:8px}
+    .badge{display:inline-block;padding:6px 8px;border-radius:999px;font-weight:700;font-size:12px}
+    .priority-easy{background:rgba(16,185,129,0.08);color:var(--easy)}
+    .priority-medium{background:rgba(245,158,11,0.08);color:var(--medium)}
+    .priority-hard{background:rgba(239,68,68,0.08);color:var(--hard)}
+    .task-actions{display:flex;gap:8px}
+    .small{font-size:13px;padding:6px 8px;border-radius:8px}
+    .muted{color:var(--muted);font-size:13px}
+    .game__stats{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .stat{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--glass)}
+    .filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    .error{color:#dc2626;font-size:13px}
+    .hint{font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">To-Do Adventure Game</div>
+    <nav>
+      <a href="#">Tasks</a>
+      <a href="#">Stats</a>
+      <a href="#">About</a>
+    </nav>
+  </header>
+
+  <div class="wrap">
+    <!-- LEFT: Game -->
+    <main>
+      <section class="card">
+        <h3>Yangi vazifa qo'shish</h3>
+        <form id="taskForm" class="game__form">
+          <div>
+            <label for="title">Vazifa nomi</label>
+            <input id="title" class="input" placeholder="Masalan: Find the sword" />
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <label for="difficulty">Qiyinchilik</label>
+              <select id="difficulty" class="select">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="tags">Kategoriya (vergul bilan)</label>
+              <input id="tags" class="input" placeholder="work,home,urgent" />
+            </div>
+          </div>
+
+          <div>
+            <label for="desc">Tavsif</label>
+            <textarea id="desc" class="textarea" placeholder="Qisqacha vazifa tavsifi..."></textarea>
+          </div>
+
+          <div class="row">
+            <div class="controls">
+              <button id="addBtn" class="btn btn-primary" type="submit">ADD TASK</button>
+              <button id="randomBtn" class="btn btn-ghost" type="button">RANDOM TASK (unshift)</button>
+              <button id="clearLastBtn" class="btn btn-ghost" type="button">CLEAR LAST (pop)</button>
+              <button id="clearFirstBtn" class="btn btn-ghost" type="button">CLEAR FIRST (shift)</button>
+              <button id="upperBtn" class="btn btn-ghost" type="button">ALL UPPERCASE</button>
+            </div>
+          </div>
+
+          <div id="formError" class="error" aria-live="polite"></div>
+          <div class="hint">String methods: trim(), toLowerCase(), toUpperCase(), split(), join(), slice()</div>
+        </form>
+
+        <hr style="margin:14px 0">
+
+        <div class="row" style="align-items:center;justify-content:space-between">
+          <div>
+            <strong>Filters</strong>
+            <div class="filters" role="tablist">
+              <button class="small" data-filter="all">All</button>
+              <button class="small" data-filter="easy">Easy</button>
+              <button class="small" data-filter="medium">Medium</button>
+              <button class="small" data-filter="hard">Hard</button>
+              <button class="small" data-filter="completed">Completed</button>
+            </div>
+          </div>
+
+          <div>
+            <input id="search" class="input" style="width:220px" placeholder="Search title..." />
+          </div>
+        </div>
+
+        <div id="taskList" class="game__list" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <!-- RIGHT: Stats -->
+    <aside class="card">
+      <h3>Statistics</h3>
+      <div class="game__stats" id="statsBox">
+        <div class="stat"><div class="muted">Total tasks</div><div id="totalCount">0</div></div>
+        <div class="stat"><div class="muted">Easy</div><div id="easyCount">0</div></div>
+        <div class="stat"><div class="muted">Medium</div><div id="mediumCount">0</div></div>
+        <div class="stat"><div class="muted">Hard</div><div id="hardCount">0</div></div>
+        <div class="stat"><div class="muted">Completed</div><div id="completedCount">0</div></div>
+        <div class="stat"><div class="muted">Categories</div><div id="catsList">—</div></div>
+      </div>
+
+      <hr style="margin:12px 0">
+
+      <div>
+        <strong>Tips</strong>
+        <p class="muted" style="margin-top:6px">push() qo'shadi, pop() oxirgisini o'chiradi, shift() boshidagisini o'chiradi, unshift() boshiga qo'shadi. flat() nested arrays ochadi.</p>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    © <span id="year"></span> To-Do Adventure — created for training
+  </footer>
+
+  <script>
+    // ================================
+    // To-Do Adventure Game — Single File
+    // Demonstrates: arrays, push/pop/shift/unshift/length/flat,
+    // split/join, string methods, type conversion, DOM, switch, ternary, if/else
+    // ================================
+
+    // DOM refs
+    const titleEl = document.getElementById('title');
+    const descEl = document.getElementById('desc');
+    const difficultyEl = document.getElementById('difficulty');
+    const tagsEl = document.getElementById('tags');
+    const addBtn = document.getElementById('addBtn');
+    const randomBtn = document.getElementById('randomBtn');
+    const clearLastBtn = document.getElementById('clearLastBtn');
+    const clearFirstBtn = document.getElementById('clearFirstBtn');
+    const upperBtn = document.getElementById('upperBtn');
+    const taskListEl = document.getElementById('taskList');
+    const formError = document.getElementById('formError');
+    const searchEl = document.getElementById('search');
+
+    // stats
+    const totalCountEl = document.getElementById('totalCount');
+    const easyCountEl = document.getElementById('easyCount');
+    const mediumCountEl = document.getElementById('mediumCount');
+    const hardCountEl = document.getElementById('hardCount');
+    const completedCountEl = document.getElementById('completedCount');
+    const catsListEl = document.getElementById('catsList');
+
+    document.getElementById('year').textContent = String(new Date().getFullYear());
+
+    // tasks array — we include a nested array to demonstrate flat()
+    let tasks = [
+      {
+        id: Date.now() - 200000,
+        title: "Rescue the villager",
+        difficulty: "easy",
+        description: "Go to the green valley and bring him back",
+        completed: false,
+        tags: ["quest","village"]
+      },
+      {
+        id: Date.now() - 100000,
+        title: "Enter the dark cave",
+        difficulty: "hard",
+        description: "Find the hidden door inside the cave",
+        completed: false,
+        tags: ["cave","explore"]
+      },
+      // nested quests group (to show flat())
+      [
+        {
+          id: "nested-1",
+          title: "Collect 3 gems",
+          difficulty: "medium",
+          description: "Gems near the river",
+          completed: false,
+          tags: ["collect"]
+        }
+      ]
+    ];
+    // Note: tasks contains objects and one nested array.
+
+    // Current UI state
+    let currentFilter = 'all';
+    let currentSearch = '';
+
+    // -------------------------
+    // Helper functions
+    // -------------------------
+    function sanitizeTitle(raw) {
+      // trim, reduce multiple spaces, lowercase, then capitalize first letters
+      if (!raw) return '';
+      let t = String(raw).trim().replace(/\s+/g,' ');
+      // make each word first letter uppercase (normalize)
+      t = t.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+      return t;
     }
 
-    // responsive
-    @media (max-width:375px) { .profile__form { grid-template-columns:1fr; } }
-  -->
+    function shortText(text, n = 40) {
+      if (!text) return '';
+      return text.length > n ? text.slice(0,n) + '...' : text;
+    }
 
-    <style>
-      /* Compiled CSS (from the SCSS above) - BEM classes used throughout */
-      :root {
-        --bg: #f3f7fb;
-        --card: #ffffff;
-        --accent: #4f46e5;
-        --muted: #6b7280;
-        --radius: 12px;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-          Roboto, "Helvetica Neue", Arial;
-        line-height: 1.4;
-        margin: 0;
-        background: var(--bg);
-        color: #111;
-      }
+    function parseTags(raw) {
+      // split by comma, trim, toLowerCase, filter empty
+      if (!raw) return [];
+      return raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+    }
 
-      .page__container {
-        max-width: 900px;
-        margin: 28px auto;
-        padding: 0 18px;
-      }
+    function nextId() {
+      return Date.now() + Math.floor(Math.random()*1000);
+    }
 
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-      }
-      .header__logo {
-        font-weight: 700;
-        font-size: 20px;
-        color: var(--accent);
-      }
-      .header__nav {
-        display: flex;
-        gap: 14px;
-      }
-      .header__nav a {
-        color: var(--muted);
-        text-decoration: none;
-        font-size: 14px;
-      }
-      .header__nav a:hover {
-        text-decoration: underline;
+    function isObjectTask(item) {
+      return typeof item === 'object' && !Array.isArray(item);
+    }
+
+    function flattenTasks() {
+      // tasks may contain nested arrays -> flat()
+      // copy + flatten one level
+      return tasks.flat().filter(isObjectTask);
+    }
+
+    // -------------------------
+    // Core functions (must exist)
+    // -------------------------
+    function addTaskFromForm(e) {
+      e.preventDefault();
+      clearError();
+      const rawTitle = titleEl.value;
+      const rawDesc = descEl.value;
+      const diff = difficultyEl.value;
+      const rawTags = tagsEl.value;
+
+      // validation using if/else
+      if (!rawTitle || !rawTitle.trim()) {
+        showError("Vazifa nomi bo'sh bo'lishi mumkin emas.");
+        return;
       }
 
-      .layout {
-        display: grid;
-        grid-template-columns: 1fr 360px;
-        gap: 18px;
-        margin-top: 18px;
-      }
+      // string methods: trim, replaceAll (example), split/join used later
+      let title = sanitizeTitle(rawTitle);
 
-      .card {
-        background: var(--card);
-        border-radius: var(--radius);
-        padding: 18px;
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-      }
+      // demonstrate split: count words
+      const wordCount = title.split(' ').filter(Boolean).length; // split() used
 
-      /* Profile form block */
-      .profile {
-      }
-      .profile__title {
-        margin: 0 0 12px 0;
-        font-size: 18px;
-      }
+      // type conversions: wordCount -> string for display later if needed
+      const wcString = String(wordCount);
 
-      .profile__form {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-      .profile__field {
-        display: flex;
-        flex-direction: column;
-      }
-      .profile__label {
-        font-size: 13px;
-        color: var(--muted);
-        margin-bottom: 6px;
-      }
-      .profile__input {
-        padding: 10px 12px;
-        border-radius: 8px;
-        border: 1px solid #e6e9ef;
-        font-size: 14px;
-      }
-      .profile__textarea {
-        min-height: 76px;
-        padding: 10px 12px;
-        border-radius: 8px;
-        border: 1px solid #e6e9ef;
-        font-size: 14px;
-        resize: vertical;
-      }
+      const description = String(rawDesc).trim();
+      const tagsArr = parseTags(rawTags); // split used inside
 
-      .profile__actions {
-        grid-column: 1/-1;
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-      }
-      .btn {
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 0;
-        cursor: pointer;
-        font-weight: 600;
-      }
-      .btn--primary {
-        background: var(--accent);
-        color: #fff;
-      }
-      .btn--ghost {
-        background: transparent;
-        border: 1px solid #e6e9ef;
-      }
-      .btn:hover {
-        transform: translateY(-1px);
-      }
-
-      /* Result box */
-      .result__title {
-        margin: 0 0 12px 0;
-        font-size: 18px;
-      }
-      .result__item {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 0;
-        border-bottom: 1px dashed #eef2ff;
-      }
-      .result__item:last-child {
-        border-bottom: none;
-      }
-      .result__value {
-        font-weight: 600;
-      }
-
-      /* small responsive */
-      @media (max-width: 800px) {
-        .layout {
-          grid-template-columns: 1fr 320px;
-        }
-      }
-      @media (max-width: 575px) {
-        .layout {
-          grid-template-columns: 1fr;
-        }
-        .profile__form {
-          grid-template-columns: 1fr;
-        }
-        .profile__actions {
-          justify-content: stretch;
-        }
-      }
-
-      footer {
-        margin: 18px 0 40px 0;
-        text-align: center;
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      /* Error */
-      .is-invalid {
-        border-color: #f43f5e;
-      }
-      .error-message {
-        color: #f43f5e;
-        font-size: 13px;
-        margin-top: 6px;
-      }
-
-      /* subtle helpers */
-      .muted {
-        color: var(--muted);
-        font-size: 13px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="page__container">
-      <header class="header">
-        <div class="header__logo">MiniProfile</div>
-        <nav class="header__nav" aria-label="main navigation">
-          <a href="#home">Home</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </header>
-
-      <main class="layout">
-        <!-- left: form -->
-        <section class="card profile" aria-labelledby="profile-heading">
-          <h2 id="profile-heading" class="profile__title">Profile Form</h2>
-
-          <form id="profileForm" class="profile__form" novalidate>
-            <div class="profile__field">
-              <label class="profile__label" for="fullName">To'liq ism</label>
-              <input
-                class="profile__input"
-                id="fullName"
-                name="fullName"
-                placeholder="Ali Vali"
-                required
-              />
-              <div
-                id="nameError"
-                class="error-message"
-                style="display: none"
-              ></div>
-            </div>
-
-            <div class="profile__field">
-              <label class="profile__label" for="birthYear"
-                >Tug'ilgan yil</label
-              >
-              <input
-                class="profile__input"
-                id="birthYear"
-                name="birthYear"
-                placeholder="1990"
-              />
-              <div
-                id="yearError"
-                class="error-message"
-                style="display: none"
-              ></div>
-            </div>
-
-            <div class="profile__field">
-              <label class="profile__label" for="ageInput"
-                >Yosh (ixtiyoriy)
-              </label>
-              <input
-                class="profile__input"
-                id="ageInput"
-                name="ageInput"
-                placeholder="Agar bor bo'lsa qo'ying"
-              />
-              <div class="muted">
-                Yoki tug'ilgan yilni to'ldiring — yosh avtomatik hisoblanadi.
-              </div>
-            </div>
-
-            <div class="profile__field">
-              <label class="profile__label" for="email">Email</label>
-              <input
-                class="profile__input"
-                id="email"
-                name="email"
-                placeholder="name@example.com"
-              />
-              <div
-                id="emailError"
-                class="error-message"
-                style="display: none"
-              ></div>
-            </div>
-
-            <div class="profile__field" style="grid-column: 1/-1">
-              <label class="profile__label" for="hobby"
-                >Hobby (qiziqishlar)</label
-              >
-              <textarea
-                id="hobby"
-                class="profile__textarea"
-                placeholder="Ex: coding, football"
-              ></textarea>
-            </div>
-
-            <div class="profile__actions">
-              <button type="button" id="clearBtn" class="btn btn--ghost">
-                Clear
-              </button>
-              <button type="button" id="saveBtn" class="btn btn--primary">
-                Save Profile
-              </button>
-            </div>
-          </form>
-        </section>
-
-        <!-- right: results -->
-        <aside class="card result" aria-labelledby="result-heading">
-          <h2 id="result-heading" class="result__title">Profile Result</h2>
-
-          <div class="result__item">
-            <div class="muted">Name</div>
-            <div id="resName" class="result__value">—</div>
-          </div>
-          <div class="result__item">
-            <div class="muted">Age</div>
-            <div id="resAge" class="result__value">—</div>
-          </div>
-          <div class="result__item">
-            <div class="muted">Email</div>
-            <div id="resEmail" class="result__value">—</div>
-          </div>
-          <div class="result__item">
-            <div class="muted">Hobby (repeated)</div>
-            <div id="resHobby" class="result__value">—</div>
-          </div>
-          <div class="result__item">
-            <div class="muted">Birth Year</div>
-            <div id="resYear" class="result__value">—</div>
-          </div>
-
-          <div
-            id="savedNotice"
-            class="muted"
-            style="margin-top: 12px; display: none"
-          >
-            Profil lokal saqlandi (LocalStorage)
-          </div>
-        </aside>
-      </main>
-
-      <footer class="card" style="margin-top: 18px">
-        <div id="footerText">© <span id="currentYear"></span> MiniProfile</div>
-      </footer>
-    </div>
-
-    <script>
-      // Required functions
-      function calculateAge(birthYear) {
-        const now = new Date();
-        const thisYear = now.getFullYear();
-        const by = Number(birthYear);
-        if (!Number.isFinite(by) || by <= 0) return null;
-        return thisYear - by;
-      }
-
-      function normalizeName(name) {
-        // apply many string methods as required
-        if (name === null || name === undefined) return "";
-        // trim both sides, then remove extra interior spaces
-        let s = String(name).trim();
-        s = s.replaceAll(/\s{2,}/g, " "); // collapse multiple spaces
-
-        // Make first character uppercase and rest lowercase
-        const first = s.charAt(0).toUpperCase();
-        const rest = s.slice(1).toLowerCase();
-        return first + rest;
-      }
-
-      function validateEmail(email) {
-        if (!email) return false;
-        const e = String(email).trim();
-        // simple validation: contains @ and a dot after @
-        return e.includes("@") && e.slice(e.indexOf("@")).includes(".");
-      }
-
-      // DOM refs
-      const el = {
-        fullName: document.querySelector("#fullName"),
-        birthYear: document.querySelector("#birthYear"),
-        ageInput: document.querySelector("#ageInput"),
-        email: document.querySelector("#email"),
-        hobby: document.querySelector("#hobby"),
-        saveBtn: document.querySelector("#saveBtn"),
-        clearBtn: document.querySelector("#clearBtn"),
-
-        resName: document.querySelector("#resName"),
-        resAge: document.querySelector("#resAge"),
-        resEmail: document.querySelector("#resEmail"),
-        resHobby: document.querySelector("#resHobby"),
-        resYear: document.querySelector("#resYear"),
-        savedNotice: document.querySelector("#savedNotice"),
-
-        nameError: document.querySelector("#nameError"),
-        emailError: document.querySelector("#emailError"),
-        yearError: document.querySelector("#yearError"),
-        footerYear: document.querySelector("#currentYear"),
+      // create task object
+      const task = {
+        id: nextId(),
+        title,
+        difficulty: diff,
+        description,
+        completed: false,
+        tags: tagsArr
       };
 
-      // set footer year using string methods
-      const fy = new Date().getFullYear().toString();
-      // demonstrate toUpperCase / toLowerCase even though numbers unaffected
-      el.footerYear.textContent = fy.toString();
+      // push to tasks (push)
+      tasks.push(task);
 
-      // Load saved profile if exists (Bonus)
-      function loadFromLocal() {
-        const raw = localStorage.getItem("miniProfile");
+      // render
+      renderTasks();
+      clearForm();
+    }
+
+    function addRandomTask() {
+      // unshift: add to beginning
+      const presets = [
+        { title: "Find the lost map", difficulty: "medium", description: "Map near the old tree", tags: ["map","forest"]},
+        { title: "Save the princess", difficulty: "hard", description: "Sneak into the castle", tags: ["stealth","castle"]},
+        { title: "Deliver potion", difficulty: "easy", description: "To the healer in town", tags: ["deliver","town"]}
+      ];
+      const pick = presets[Math.floor(Math.random()*presets.length)];
+      const t = {
+        id: nextId(),
+        title: sanitizeTitle(pick.title),
+        difficulty: pick.difficulty,
+        description: pick.description,
+        completed: false,
+        tags: pick.tags
+      };
+      tasks.unshift(t); // unshift()
+      renderTasks();
+    }
+
+    function clearLastTask() {
+      // pop()
+      const last = tasks.pop();
+      // If last was an array (nested), we still popped it; inform optionally
+      renderTasks();
+      return last;
+    }
+
+    function clearFirstTask() {
+      // shift()
+      const first = tasks.shift();
+      renderTasks();
+      return first;
+    }
+
+    function toggleComplete(id) {
+      // find in flattened tasks (because nested arrays may exist)
+      let found = false;
+      tasks = tasks.map(item => {
+        if (Array.isArray(item)) {
+          // nested group -> map inside
+          return item.map(t => {
+            if (t.id == id) { t.completed = !t.completed; found = true; }
+            return t;
+          });
+        } else {
+          if (item.id == id) { item.completed = !item.completed; found = true; }
+          return item;
+        }
+      });
+      renderTasks();
+      return found;
+    }
+
+    function deleteTask(id) {
+      // remove task by id (handle nested)
+      tasks = tasks.map(item => {
+        if (Array.isArray(item)) {
+          return item.filter(t => t.id != id);
+        } else {
+          return item.id == id ? null : item;
+        }
+      }).filter(Boolean).map(item => {
+        // after filtering we might still have empty arrays -> keep as arrays (could flat later)
+        return Array.isArray(item) ? item.filter(Boolean) : item;
+      });
+      // remove empty nested arrays
+      tasks = tasks.filter(item => {
+        if (Array.isArray(item)) return item.length > 0;
+        return true;
+      });
+      renderTasks();
+    }
+
+    function editTask(id) {
+      // simple inline edit: find task, fill form with values and remove original
+      const flat = flattenTasks();
+      const t = flat.find(x => x.id == id);
+      if (!t) return;
+      // fill form
+      titleEl.value = t.title;
+      descEl.value = t.description;
+      difficultyEl.value = t.difficulty;
+      tagsEl.value = t.tags.join(',');
+      // delete original
+      deleteTask(id);
+      // focus title
+      titleEl.focus();
+    }
+
+    function convertAllUpper() {
+      // array.map + toUpperCase()
+      // We must update tasks in place for all object tasks
+      tasks = tasks.map(item => {
+        if (Array.isArray(item)) {
+          return item.map(t => {
+            t.title = t.title.toUpperCase();
+            return t;
+          });
+        } else {
+          item.title = item.title.toUpperCase();
+          return item;
+        }
+      });
+      renderTasks();
+    }
+
+    function countStats() {
+      const flat = flattenTasks();
+      const total = flat.length;
+      const easy = flat.filter(t => t.difficulty === 'easy').length;
+      const medium = flat.filter(t => t.difficulty === 'medium').length;
+      const hard = flat.filter(t => t.difficulty === 'hard').length;
+      const completed = flat.filter(t => t.completed).length;
+      // cats: collect tags and join()
+      const allTags = flat.map(t => t.tags).flat(); // flat used
+      // Use join to display categories as string. If none -> show '-'
+      const cats = allTags.length ? Array.from(new Set(allTags)).join(', ') : '—';
+
+      totalCountEl.textContent = String(total); // number -> string
+      easyCountEl.textContent = String(easy);
+      mediumCountEl.textContent = String(medium);
+      hardCountEl.textContent = String(hard);
+      completedCountEl.textContent = String(completed);
+      catsListEl.textContent = cats;
+    }
+
+    // Rendering function: major work with DOM, switch, ternary usage
+    function renderTasks() {
+      // filter and search applied to flattened tasks
+      const flat = flattenTasks();
+      let toRender = flat.filter(t => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'completed') return t.completed === true;
+        return t.difficulty === currentFilter;
+      });
+
+      if (currentSearch && currentSearch.trim()) {
+        const q = currentSearch.trim().toLowerCase();
+        toRender = toRender.filter(t => t.title.toLowerCase().includes(q));
+      }
+
+      // sort by newest first (using id timestamp)
+      toRender.sort((a,b)=> b.id - a.id);
+
+      // clear
+      taskListEl.innerHTML = '';
+
+      if (toRender.length === 0) {
+        const p = document.createElement('div');
+        p.className = 'muted';
+        p.textContent = 'Hech qanday vazifa topilmadi.';
+        taskListEl.appendChild(p);
+      }
+
+      // build nodes
+      toRender.forEach(task => {
+        const item = document.createElement('div');
+        item.className = 'game__item';
+
+        // left: title + meta
+        const left = document.createElement('div');
+        left.style.flex = '1';
+
+        const h = document.createElement('div');
+        h.style.display = 'flex';
+        h.style.alignItems = 'center';
+        h.style.gap = '10px';
+
+        const titleNode = document.createElement('strong');
+        titleNode.textContent = task.title;
+
+        // badge for difficulty using switch
+        const badge = document.createElement('span');
+        badge.className = 'badge ' + (task.difficulty === 'easy' ? 'priority-easy' : task.difficulty === 'medium' ? 'priority-medium' : 'priority-hard');
+
+        switch(task.difficulty) {
+          case 'easy': badge.textContent = 'EASY'; break;
+          case 'medium': badge.textContent = 'MEDIUM'; break;
+          case 'hard': badge.textContent = 'HARD'; break;
+          default: badge.textContent = '—';
+        }
+
+        h.appendChild(titleNode);
+        h.appendChild(badge);
+
+        const meta = document.createElement('div');
+        meta.className = 'game__meta';
+        // ternary: completed label
+        meta.innerHTML = `${shortText(task.description, 80)} <br> <span class="muted">Tags:</span> ${task.tags.join(', ') || '—'} • <span class="muted">Status:</span> ${task.completed ? '<strong>Completed</strong>' : 'Not Completed'}`;
+
+        left.appendChild(h);
+        left.appendChild(meta);
+
+        // right: actions
+        const right = document.createElement('div');
+        right.style.display = 'flex';
+        right.style.flexDirection = 'column';
+        right.style.gap = '8px';
+        right.style.alignItems = 'flex-end';
+
+        const actions = document.createElement('div');
+        actions.className = 'task-actions';
+
+        const completeBtn = document.createElement('button');
+        completeBtn.className = 'small';
+        completeBtn.textContent = task.completed ? 'Undo' : 'Complete';
+        completeBtn.addEventListener('click', ()=> toggleComplete(task.id));
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'small';
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', ()=> editTask(task.id));
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'small';
+        delBtn.textContent = 'Delete';
+        delBtn.addEventListener('click', ()=> {
+          if (confirm('Vazifani o\'chirmoqchimisiz?')) deleteTask(task.id);
+        });
+
+        actions.appendChild(completeBtn);
+        actions.appendChild(editBtn);
+        actions.appendChild(delBtn);
+
+        // add simple visual for completed
+        if (task.completed) {
+          item.style.opacity = '0.7';
+          titleNode.style.textDecoration = 'line-through';
+        }
+
+        right.appendChild(actions);
+
+        item.appendChild(left);
+        item.appendChild(right);
+
+        taskListEl.appendChild(item);
+      });
+
+      // update stats
+      countStats();
+    }
+
+    // countStats wrapper to demonstrate calling
+    function countStats() {
+      countStats = function(){ // trick to avoid name collision, but we'll call inner here
+        // this inner body unreachable because replaced, to keep consistent we'll call countStatsReal
+      };
+    }
+    // to avoid overriding above, define countStatsReal and call it
+    function countStatsReal() {
+      const flat = flattenTasks();
+      const total = flat.length;
+      const easy = flat.filter(t => t.difficulty === 'easy').length;
+      const medium = flat.filter(t => t.difficulty === 'medium').length;
+      const hard = flat.filter(t => t.difficulty === 'hard').length;
+      const completed = flat.filter(t => t.completed).length;
+      const allTags = flat.map(t => t.tags).flat();
+      const cats = allTags.length ? Array.from(new Set(allTags)).join(', ') : '—';
+
+      totalCountEl.textContent = String(total);
+      easyCountEl.textContent = String(easy);
+      mediumCountEl.textContent = String(medium);
+      hardCountEl.textContent = String(hard);
+      completedCountEl.textContent = String(completed);
+      catsListEl.textContent = cats;
+    }
+
+    // Hook the real function to be used
+    // We will call countStatsReal() inside renderTasks instead of countStats()
+    // Adjust renderTasks to call countStatsReal
+    // (Patch: override renderTasks to call countStatsReal at end)
+    const _originalRender = renderTasks;
+    renderTasks = function() {
+      // original render code above will be executed by invoking the function above, but to avoid complexity
+      // we will simply reimplement a simpler render that reuses the earlier implementation
+      // For simplicity call the earlier defined renderTasksImpl
+      renderTasksImpl();
+      countStatsReal();
+    };
+
+    // The above reference renderTasksImpl doesn't exist yet; let's reorganize: define a single render implementation
+    function renderTasksImpl() {
+      // copy of earlier rendering logic but simpler: reuse existing flattenTasks etc.
+      const flat = flattenTasks();
+      let toRender = flat.filter(t => {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'completed') return t.completed === true;
+        return t.difficulty === currentFilter;
+      });
+
+      if (currentSearch && currentSearch.trim()) {
+        const q = currentSearch.trim().toLowerCase();
+        toRender = toRender.filter(t => t.title.toLowerCase().includes(q));
+      }
+
+      toRender.sort((a,b)=> b.id - a.id);
+
+      taskListEl.innerHTML = '';
+      if (toRender.length === 0) {
+        const p = document.createElement('div');
+        p.className = 'muted';
+        p.textContent = 'Hech qanday vazifa topilmadi.';
+        taskListEl.appendChild(p);
+      }
+
+      toRender.forEach(task => {
+        const item = document.createElement('div');
+        item.className = 'game__item';
+
+        const left = document.createElement('div');
+        left.style.flex = '1';
+
+        const h = document.createElement('div');
+        h.style.display = 'flex';
+        h.style.alignItems = 'center';
+        h.style.gap = '10px';
+
+        const titleNode = document.createElement('strong');
+        titleNode.textContent = task.title;
+
+        const badge = document.createElement('span');
+        badge.className = 'badge ' + (task.difficulty === 'easy' ? 'priority-easy' : task.difficulty === 'medium' ? 'priority-medium' : 'priority-hard');
+
+        switch(task.difficulty) {
+          case 'easy': badge.textContent = 'EASY'; break;
+          case 'medium': badge.textContent = 'MEDIUM'; break;
+          case 'hard': badge.textContent = 'HARD'; break;
+          default: badge.textContent = '—';
+        }
+
+        h.appendChild(titleNode);
+        h.appendChild(badge);
+
+        const meta = document.createElement('div');
+        meta.className = 'game__meta';
+        meta.innerHTML = `${shortText(task.description,80)} <br> <span class="muted">Tags:</span> ${task.tags.join(', ') || '—'} • <span class="muted">Status:</span> ${task.completed ? '<strong>Completed</strong>' : 'Not Completed'}`;
+
+        left.appendChild(h);
+        left.appendChild(meta);
+
+        const right = document.createElement('div');
+        right.style.display = 'flex';
+        right.style.flexDirection = 'column';
+        right.style.gap = '8px';
+        right.style.alignItems = 'flex-end';
+
+        const actions = document.createElement('div');
+        actions.className = 'task-actions';
+
+        const completeBtn = document.createElement('button');
+        completeBtn.className = 'small';
+        completeBtn.textContent = task.completed ? 'Undo' : 'Complete';
+        completeBtn.addEventListener('click', ()=> toggleComplete(task.id));
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'small';
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', ()=> editTask(task.id));
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'small';
+        delBtn.textContent = 'Delete';
+        delBtn.addEventListener('click', ()=> {
+          if (confirm('Vazifani o\'chirmoqchimisiz?')) deleteTask(task.id);
+        });
+
+        actions.appendChild(completeBtn);
+        actions.appendChild(editBtn);
+        actions.appendChild(delBtn);
+
+        if (task.completed) {
+          item.style.opacity = '0.7';
+          titleNode.style.textDecoration = 'line-through';
+        }
+
+        right.appendChild(actions);
+        item.appendChild(left);
+        item.appendChild(right);
+        taskListEl.appendChild(item);
+      });
+    }
+
+    // Finally override renderTasks name to call our impl and stats
+    renderTasks = function() {
+      renderTasksImpl();
+      countStatsReal();
+    };
+
+    // -------------------------
+    // Utilities
+    // -------------------------
+    function showError(msg) {
+      formError.textContent = msg;
+    }
+    function clearError() {
+      formError.textContent = '';
+    }
+    function clearForm() {
+      titleEl.value = '';
+      descEl.value = '';
+      tagsEl.value = '';
+      difficultyEl.value = 'medium';
+      clearError();
+    }
+
+    // -------------------------
+    // Event bindings
+    // -------------------------
+    document.getElementById('taskForm').addEventListener('submit', addTaskFromForm);
+    randomBtn.addEventListener('click', addRandomTask);
+    clearLastBtn.addEventListener('click', ()=> {
+      // demonstrate pop() and also show what was removed using split/join example
+      const removed = clearLastTask();
+      if (removed) {
+        // if removed is an array or object, create message
+        let msg = '';
+        if (Array.isArray(removed)) {
+          msg = 'Removed nested group';
+        } else {
+          msg = `Removed: ${removed.title}`;
+        }
+        alert(msg);
+      } else {
+        alert('Hech narsa yo\'q.');
+      }
+    });
+    clearFirstBtn.addEventListener('click', ()=> {
+      const rem = clearFirstTask();
+      if (rem) {
+        if (Array.isArray(rem)) alert('Removed nested group (first)');
+        else alert('Removed: ' + rem.title);
+      } else alert('Hech narsa yo\'q.');
+    });
+
+    upperBtn.addEventListener('click', convertAllUpper);
+
+    // filters
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+      btn.addEventListener('click', (e)=>{
+        currentFilter = e.target.getAttribute('data-filter');
+        renderTasks();
+      });
+    });
+
+    searchEl.addEventListener('input', (e)=>{
+      currentSearch = e.target.value;
+      renderTasks();
+    });
+
+    // keyboard: Enter in search clears filter quickly (just UX)
+    searchEl.addEventListener('keydown', (e)=>{
+      if (e.key === 'Escape') { searchEl.value=''; currentSearch=''; renderTasks(); }
+    });
+
+    // initialize UI
+    renderTasks();
+
+    // Save/Load to localStorage as bonus (demonstration of JSON, join/split maybe used)
+    window.addEventListener('beforeunload', ()=> {
+      try {
+        // convert to JSON and save
+        localStorage.setItem('adventure_tasks', JSON.stringify(tasks));
+      } catch(e){}
+    });
+
+    (function loadFromStorage(){
+      try {
+        const raw = localStorage.getItem('adventure_tasks');
         if (!raw) return;
-        try {
-          const p = JSON.parse(raw);
-          el.fullName.value = p.fullName || "";
-          el.birthYear.value = p.birthYear || "";
-          el.ageInput.value = p.ageInput || "";
-          el.email.value = p.email || "";
-          el.hobby.value = p.hobby || "";
-          renderResult(p);
-          el.savedNotice.style.display = "block";
-        } catch (err) {
-          console.warn("load error", err);
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length) tasks = parsed;
+        renderTasks();
+      } catch(e){}
+    })();
+
+    // Demonstrate join: build quick categories string at load
+    (function showCatsJoinExample(){
+      const flat = flattenTasks();
+      const allTags = flat.map(t => t.tags).flat();
+      if (allTags.length) {
+        // join used to make display
+        catsListEl.textContent = Array.from(new Set(allTags)).join(', ');
+      }
+    })();
+
+    // Extra demonstration: use split and join to normalize tags of first task (if exists)
+    (function normalizeFirstTaskTags(){
+      const flat = flattenTasks();
+      if (flat.length > 0) {
+        const first = flat[0];
+        if (first.tags && first.tags.length) {
+          // create a string then split again to show both methods
+          const tagsString = first.tags.join(','); // join()
+          const tagsBack = tagsString.split(',').map(s=>s.trim()); // split()
+          first.tags = tagsBack;
         }
       }
+    })();
 
-      function renderResult(profile) {
-        // normalize and display
-        const nm = normalizeName(profile.fullName || "");
-        el.resName.textContent = nm || "—";
-
-        // Age logic: prefer explicit ageInput, else compute from birthYear
-        let age = null;
-        if (profile.ageInput !== undefined && profile.ageInput !== "") {
-          age = Number(profile.ageInput);
-          if (!Number.isFinite(age)) age = null;
-        }
-        if (age === null) {
-          age = calculateAge(profile.birthYear);
-        }
-        el.resAge.textContent = age === null || age === undefined ? "—" : age;
-
-        el.resEmail.textContent = (profile.email || "").toLowerCase() || "—";
-
-        // hobby repeated 3 times using repeat()
-        const rawHobby = (profile.hobby || "").trim();
-        el.resHobby.textContent = rawHobby
-          ? (rawHobby + " • ").repeat(3).slice(0, -3)
-          : "—";
-
-        el.resYear.textContent = profile.birthYear || "—";
-      }
-
-      function clearErrors() {
-        el.nameError.style.display = "none";
-        el.emailError.style.display = "none";
-        el.yearError.style.display = "none";
-        el.fullName.classList.remove("is-invalid");
-        el.email.classList.remove("is-invalid");
-        el.birthYear.classList.remove("is-invalid");
-      }
-
-      // on save
-      el.saveBtn.addEventListener("click", function () {
-        clearErrors();
-
-        // gather values (shows usage of trimStart/trimEnd via JS methods)
-        const rawName = el.fullName.value.trim();
-        const rawEmail = el.email.value.trim();
-        const rawBirthYear = el.birthYear.value.trim();
-        const rawAgeInput = el.ageInput.value.trim();
-        const rawHobby = el.hobby.value.trim();
-
-        // validations (bonus)
-        let hasError = false;
-        if (rawName.length === 0) {
-          el.nameError.textContent = "Ism bo'sh bo'lishi mumkin emas";
-          el.nameError.style.display = "block";
-          el.fullName.classList.add("is-invalid");
-          hasError = true;
-        }
-
-        if (rawEmail.length > 0 && !validateEmail(rawEmail)) {
-          el.emailError.textContent = "Email noto'g'ri formatda";
-          el.emailError.style.display = "block";
-          el.email.classList.add("is-invalid");
-          hasError = true;
-        }
-
-        if (rawBirthYear.length > 0) {
-          const by = Number(rawBirthYear);
-          if (
-            !Number.isFinite(by) ||
-            by < 1900 ||
-            by > new Date().getFullYear()
-          ) {
-            el.yearError.textContent = "Tug'ilgan yil noto'g'ri";
-            el.yearError.style.display = "block";
-            el.birthYear.classList.add("is-invalid");
-            hasError = true;
-          }
-        }
-
-        if (hasError) return;
-
-        // conversions demonstrate Number()
-        const profile = {
-          fullName: rawName,
-          email: rawEmail.toLowerCase(), // toLowerCase usage
-          birthYear: rawBirthYear ? Number(rawBirthYear) : "",
-          ageInput: rawAgeInput ? Number(rawAgeInput) : "",
-          hobby: rawHobby,
-        };
-
-        // small string replace example: replaceAll - replace commas with slash for display
-        profile.hobby = profile.hobby.replaceAll(",", " ,");
-
-        // render to result box
-        renderResult(profile);
-
-        // visual feedback: temporarily change background of result box using style
-        const resultCard = document.querySelector(".result");
-        resultCard.style.transition = "background 300ms ease";
-        resultCard.style.background = "#f8fafc";
-        setTimeout(() => {
-          resultCard.style.background = "";
-        }, 350);
-
-        // save to localStorage (bonus)
-        try {
-          localStorage.setItem("miniProfile", JSON.stringify(profile));
-          el.savedNotice.style.display = "block";
-        } catch (err) {
-          console.warn("storage", err);
-        }
-      });
-
-      // Clear button
-      el.clearBtn.addEventListener("click", function () {
-        document.querySelector("#profileForm").reset();
-        clearErrors();
-        // clear result box
-        el.resName.textContent = "—";
-        el.resAge.textContent = "—";
-        el.resEmail.textContent = "—";
-        el.resHobby.textContent = "—";
-        el.resYear.textContent = "—";
-        el.savedNotice.style.display = "none";
-        // remove from localStorage
-        localStorage.removeItem("miniProfile");
-      });
-
-      // small UX: show a preview while typing -> use input event
-      el.fullName.addEventListener("input", function () {
-        // show first char capitalized live using normalizeName
-        const live = normalizeName(this.value);
-        document.querySelector("#resName").textContent = live || "—";
-      });
-
-      // demonstrate use of document.querySelector for multiple elements
-      window.addEventListener("DOMContentLoaded", function () {
-        loadFromLocal();
-      });
-
-      // Additional demonstration of string methods in the console (for student learning)
-      (function demoStringMethods() {
-        const sample = "  hello WORLD  ";
-        console.log("orig:", sample);
-        console.log("trim() ->", sample.trim());
-        console.log("trimStart() ->", sample.trimStart());
-        console.log("trimEnd() ->", sample.trimEnd());
-        console.log("toUpperCase() ->", sample.toUpperCase());
-        console.log("toLowerCase() ->", sample.toLowerCase());
-        console.log("charAt(2) ->", sample.charAt(2));
-        console.log("slice(2,7) ->", sample.slice(2, 7));
-        console.log("replace ->", sample.replace("hello", "hi"));
-        console.log("replaceAll ->", "a,a,a".replaceAll(",", ";"));
-        console.log("repeat ->", "hey".repeat(2));
-        console.log("length ->", sample.length);
-      })();
-    </script>
-  </body>
+  </script>
+</body>
 </html>
