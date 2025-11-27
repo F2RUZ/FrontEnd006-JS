@@ -1,4 +1,3 @@
-// import Toastify from "./node_modules/toastify-js/src/toastify.js";
 const elForm = document.querySelector(".form");
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -6,69 +5,53 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegex =
   /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]:;"'<>.,?/~`]).{8,}$/;
 
-//addevent
+// === Toast notification function ===
+const showToast = (text, color = "red") => {
+  Toastify({
+    text,
+    duration: 1500,
+    close: true,
+    gravity: "top",
+    position: "center",
+    stopOnFocus: true,
+    style: {
+      background:
+        color === "red"
+          ? "linear-gradient(to right, red, crimson)"
+          : "linear-gradient(to right, green, limegreen)",
+    },
+  }).showToast();
+};
 
 elForm.addEventListener("submit", (e) => {
-  e.preventDefault(); // reaload oldinin oladi
+  e.preventDefault();
 
   const username = elForm["username"].value.trim();
   const passwd = elForm["passwd"].value.trim();
   const email = elForm["email"].value.trim();
 
-  if (!emailRegex.test(email) || !passwordRegex.test(passwd)) {
-    return Toastify({
-      text: "Email or passwd not valid",
-      duration: 1000,
-      destination: "https://github.com/apvarun/toastify-js",
-      newWindow: true,
-      close: true,
-      gravity: "top", // `top` or `bottom`
-      position: "center", // `left`, `center` or `right`
-      stopOnFocus: true, // Prevents dismissing of toast on hover
-      style: {
-        background: "linear-gradient(to right, red, crimson)",
-      },
-      onClick: function () {}, // Callback after click
-    }).showToast();
+  // === Validations ===
+  if (username.length < 3) {
+    return showToast("Username must be at least 3 chars");
   }
 
-  if (username === "") {
-    return Toastify({
-      text: "username not valid",
-      duration: 1000,
-      destination: "https://github.com/apvarun/toastify-js",
-      newWindow: true,
-      close: true,
-      gravity: "top", // `top` or `bottom`
-      position: "center", // `left`, `center` or `right`
-      stopOnFocus: true, // Prevents dismissing of toast on hover
-      style: {
-        background: "linear-gradient(to right, red, crimson)",
-      },
-      onClick: function () {}, // Callback after click
-    }).showToast();
+  if (!emailRegex.test(email)) {
+    return showToast("Invalid email format");
   }
 
+  if (!passwordRegex.test(passwd)) {
+    return showToast(
+      "Password must contain letters, numbers, symbols and be 8+ chars"
+    );
+  }
+
+  // === If all valid ===
   const user = {
-    username: username,
-    email: email,
-    passwd: passwd,
+    username,
+    email,
+    passwd,
   };
 
-  Toastify({
-    text: "Successfull validation",
-    duration: 1000,
-    destination: "https://github.com/apvarun/toastify-js",
-    newWindow: true,
-    close: true,
-    gravity: "top", // `top` or `bottom`
-    position: "center", // `left`, `center` or `right`
-    stopOnFocus: true, // Prevents dismissing of toast on hover
-    style: {
-      background: "linear-gradient(to right, green, greenyellow)",
-    },
-    onClick: function () {}, // Callback after click
-  }).showToast();
-
+  showToast("Successful validation", "green");
   console.log(user);
 });
