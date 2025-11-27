@@ -80,3 +80,10 @@ body {
 .btn:hover {
   background: #4338ca;
 }
+
+.add {
+  color: red;
+  font-style: italic;
+  text-transform: uppercase;
+}
+
