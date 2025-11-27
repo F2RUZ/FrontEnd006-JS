@@ -1,47 +1,57 @@
 const elForm = document.querySelector(".form");
-// const elInput = document.querySelector(".todo-input");
-const elMessage = document.querySelector(".message");
-const elClear = document.querySelector(".clearall");
-const elList = document.querySelector(".list");
 
-//AddEvent
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+const passwordRegex =
+  /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{}[\]:;"'<>.,?/~`]).{8,}$/;
+
+// === Toast notification function ===
+const showToast = (text, color = "red") => {
+  Toastify({
+    text,
+    duration: 1500,
+    close: true,
+    gravity: "top",
+    position: "center",
+    stopOnFocus: true,
+    style: {
+      background:
+        color === "red"
+          ? "linear-gradient(to right, red, crimson)"
+          : "linear-gradient(to right, green, limegreen)",
+    },
+  }).showToast();
+};
 
 elForm.addEventListener("submit", (e) => {
-  e.preventDefault(); // reload bolishini oldininoladi
+  e.preventDefault();
 
-  let inputValue = elForm["input"].value.trim();
+  const username = elForm["username"].value.trim();
+  const passwd = elForm["passwd"].value.trim();
+  const email = elForm["email"].value.trim();
 
-  if (!inputValue) return (elMessage.textContent = "Maydonni toldir");
+  // === Validations ===
+  if (username.length < 3) {
+    return showToast("Username must be at least 3 chars");
+  }
 
-  elMessage.textContent = "";
-  elList.innerHTML += `
-    <div class="item">
-          <p class="todo-text">${
-            inputValue.length > 12
-              ? inputValue.slice(0, 12).concat("...")
-              : inputValue
-          }</p>
+  if (!emailRegex.test(email)) {
+    return showToast("Invalid email format");
+  }
 
-          <div>
-            <div class="fix">
-              <div>
-                <i class="ri-calendar-line"></i>
-                <span>20.11.2025</span>
-              </div>
-              <i class="ri-check-line"></i>
-              <i class="ri-pencil-line"></i>
-              <i class="ri-delete-bin-line"></i>
-            </div>
-          </div>
-        </div>
-  
-  `;
+  if (!passwordRegex.test(passwd)) {
+    return showToast(
+      "Password must contain letters, numbers, symbols and be 8+ chars"
+    );
+  }
 
-  elForm.reset();
-});
+  // === If all valid ===
+  const user = {
+    username,
+    email,
+    passwd,
+  };
 
-//Clear btn
-
-elClear.addEventListener("click", () => {
-  elList.innerHTML = "";
+  showToast("Successful validation", "green");
+  console.log(user);
 });
