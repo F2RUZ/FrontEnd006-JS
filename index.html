@@ -1,20 +1,826 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Key Inspector — Toptal Keycode uslubida</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg1: #0f1724;
+        --bg2: #07101a;
+        --glass: rgba(255, 255, 255, 0.06);
+        --accent1: #6ee7b7;
+        --accent2: #7c3aed;
+        --muted: rgba(255, 255, 255, 0.65);
+        --card: rgba(255, 255, 255, 0.03);
+        --glass-2: rgba(255, 255, 255, 0.03);
+        font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto,
+          "Helvetica Neue", Arial;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: radial-gradient(
+            1000px 600px at 10% 10%,
+            rgba(124, 58, 237, 0.12),
+            transparent 10%
+          ),
+          radial-gradient(
+            800px 500px at 95% 80%,
+            rgba(14, 165, 233, 0.06),
+            transparent 10%
+          ),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+        color: #e6eef8;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding: 28px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 24px;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 1100px;
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 18px;
+        align-items: start;
+      }
+
+      header {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--accent2), var(--accent1));
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.18);
+      }
+      .brand h1 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .brand p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .main {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 14px;
+        padding: 22px;
+        box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+        border: 1px solid var(--glass);
+        min-height: 420px;
+      }
+
+      .hero {
+        display: flex;
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      /* Big key display */
+      .big-key {
+        flex: 1;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 12px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        border: 1px solid var(--glass-2);
+        min-height: 220px;
+      }
+      .key-visual {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 10px;
+        padding: 18px;
+        box-shadow: inset 0 -6px 20px rgba(0, 0, 0, 0.35);
+        min-height: 120px;
+        position: relative;
+      }
+      .key-pill {
+        font-weight: 800;
+        font-size: 48px;
+        padding: 18px 26px;
+        border-radius: 14px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.01)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        letter-spacing: 1px;
+        backdrop-filter: blur(4px);
+      }
+      .key-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 6px;
+      }
+      .info {
+        background: var(--card);
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid var(--glass-2);
+        font-size: 13px;
+      }
+      .info b {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* Right panel */
+      .sidebar {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 14px;
+        padding: 18px;
+        border: 1px solid var(--glass-2);
+        min-height: 420px;
+      }
+      .sidebar h3 {
+        margin: 0 0 8px 0;
+      }
+      .meta {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .chip {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        font-size: 13px;
+      }
+
+      /* keyboard grid for clickable keys */
+      .keyboard {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 8px;
+      }
+      .k {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 13px;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+        user-select: none;
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+      .k:active,
+      .k.active {
+        transform: translateY(2px) scale(0.995);
+        box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6) inset;
+      }
+      .k.large {
+        grid-column: span 2;
+        font-weight: 600;
+      }
+      .k.xlarge {
+        grid-column: span 3;
+        font-weight: 700;
+      }
+      .k.wide {
+        grid-column: span 4;
+      }
+
+      footer {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* history */
+      .history {
+        margin-top: 12px;
+        max-height: 180px;
+        overflow: auto;
+        padding-right: 6px;
+      }
+      .hist-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.02);
+        margin-bottom: 8px;
+        background: transparent;
+        font-size: 13px;
+      }
+      .empty {
+        color: var(--muted);
+        text-align: center;
+        padding: 24px;
+        font-size: 14px;
+      }
+
+      /* small screens */
+      @media (max-width: 980px) {
+        .container {
+          grid-template-columns: 1fr;
+          padding: 0 6px;
+        }
+        .sidebar {
+          order: 2;
+        }
+      }
+
+      /* subtle glow for active */
+      .glow {
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        pointer-events: none;
+        box-shadow: 0 8px 40px rgba(124, 58, 237, 0.14);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+      .glow.show {
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
-    <h1 class="title">Dom Event Types</h1>
+    <div
+      class="container"
+      role="application"
+      aria-label="Key inspector application"
+    >
+      <header>
+        <div class="brand" aria-hidden="false">
+          <div class="logo">K</div>
+          <div>
+            <h1>Key Inspector</h1>
+            <p>
+              Klaviatura tugmachalari haqida to‘liq ma'lumot — e.key, e.code,
+              keyCode va boshqalar
+            </p>
+          </div>
+        </div>
+        <div style="text-align: right">
+          <div class="muted" style="font-size: 13px">
+            Bosish: real tugma yoki quyidagi klaviaturadan bosing
+          </div>
+          <div style="height: 6px"></div>
+          <div class="chip">Designed for learning</div>
+        </div>
+      </header>
 
-    <form class="form" action="">
-      <input class="name" type="text" placeholder="write some text" />
-    </form>
+      <main class="main" id="main">
+        <section class="hero" aria-live="polite">
+          <div class="big-key" id="display">
+            <div class="key-visual" id="visual">
+              <div class="glow" id="glow"></div>
+              <div class="key-pill" id="keyLabel">Press any key</div>
+            </div>
 
-    <button type="submit" class="btn">meni boss</button>
+            <div class="key-info-grid" id="infoGrid">
+              <div class="info">
+                <b>Event key</b>
+                <div id="val_key" class="muted">—</div>
+              </div>
+              <div class="info">
+                <b>Code</b>
+                <div id="val_code" class="muted">—</div>
+              </div>
 
-    <script src="./index.js"></script>
+              <div class="info">
+                <b>keyCode (deprecated)</b>
+                <div id="val_keyCode" class="muted">—</div>
+              </div>
+              <div class="info">
+                <b>which</b>
+                <div id="val_which" class="muted">—</div>
+              </div>
+
+              <div class="info">
+                <b>charCode</b>
+                <div id="val_charCode" class="muted">—</div>
+              </div>
+              <div class="info">
+                <b>location</b>
+                <div id="val_location" class="muted">—</div>
+              </div>
+
+              <div class="info">
+                <b>Modifier</b>
+                <div id="val_mod" class="muted">—</div>
+              </div>
+              <div class="info">
+                <b>Timestamp</b>
+                <div id="val_time" class="muted">—</div>
+              </div>
+            </div>
+
+            <footer>
+              <div class="muted">
+                Maslahat: brauzerlar `keyCode` ni asta-sekin olib tashlamoqda —
+                <b>e.key</b> va <b>e.code</b> ustunroq.
+              </div>
+            </footer>
+          </div>
+
+          <aside class="sidebar" aria-label="Details and controls">
+            <h3>Qo‘shimcha</h3>
+            <div class="meta">
+              <div class="chip" id="chipPrintable">Printable: —</div>
+              <div class="chip" id="chipIsComposing">Composing: —</div>
+              <div class="chip" id="chipCtrl">Ctrl: —</div>
+              <div class="chip" id="chipAlt">Alt: —</div>
+              <div class="chip" id="chipShift">Shift: —</div>
+              <div class="chip" id="chipMeta">Meta: —</div>
+            </div>
+
+            <h3 style="margin-top: 12px">On-screen keys (bosish uchun)</h3>
+            <div class="keyboard" id="keyboard" aria-hidden="false">
+              <!-- We'll generate keys by JS for convenience -->
+            </div>
+
+            <h3 style="margin-top: 12px">History</h3>
+            <div class="history" id="history" aria-live="polite">
+              <div class="empty" id="histEmpty">
+                Hech qanday tugma bosilmadi.
+              </div>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      /*
+  Key Inspector
+  - Press physical key OR click on on-screen key
+  - Displays full event details similar to toptal keycode
+*/
+
+      // Common keys to render (arranged roughly)
+      const keyRows = [
+        [
+          "Escape",
+          "F1",
+          "F2",
+          "F3",
+          "F4",
+          "F5",
+          "F6",
+          "F7",
+          "F8",
+          "F9",
+          "F10",
+          "F11",
+        ],
+        [
+          "Backquote",
+          "Digit1",
+          "Digit2",
+          "Digit3",
+          "Digit4",
+          "Digit5",
+          "Digit6",
+          "Digit7",
+          "Digit8",
+          "Digit9",
+          "Digit0",
+          "Minus",
+        ],
+        [
+          "Tab",
+          "KeyQ",
+          "KeyW",
+          "KeyE",
+          "KeyR",
+          "KeyT",
+          "KeyY",
+          "KeyU",
+          "KeyI",
+          "KeyO",
+          "KeyP",
+          "BracketLeft",
+        ],
+        [
+          "CapsLock",
+          "KeyA",
+          "KeyS",
+          "KeyD",
+          "KeyF",
+          "KeyG",
+          "KeyH",
+          "KeyJ",
+          "KeyK",
+          "KeyL",
+          "Semicolon",
+          "Quote",
+        ],
+        [
+          "ShiftLeft",
+          "KeyZ",
+          "KeyX",
+          "KeyC",
+          "KeyV",
+          "KeyB",
+          "KeyN",
+          "KeyM",
+          "Comma",
+          "Period",
+          "Slash",
+          "ShiftRight",
+        ],
+        [
+          "ControlLeft",
+          "MetaLeft",
+          "AltLeft",
+          "Space",
+          "AltRight",
+          "MetaRight",
+          "ContextMenu",
+          "ControlRight",
+        ],
+      ];
+
+      // Map code -> label shown on key
+      function labelFor(code) {
+        // readable labels
+        const special = {
+          Backquote: "`",
+          Minus: "-",
+          Equal: "=",
+          BracketLeft: "[",
+          BracketRight: "]",
+          Backslash: "\\",
+          Semicolon: ";",
+          Quote: "'",
+          Comma: ",",
+          Period: ".",
+          Slash: "/",
+          Space: "Space",
+          Tab: "Tab",
+          Enter: "Enter",
+          Backspace: "Backspace",
+          CapsLock: "Caps",
+          ShiftLeft: "Shift",
+          ShiftRight: "Shift",
+          ControlLeft: "Ctrl",
+          ControlRight: "Ctrl",
+          MetaLeft: "Meta",
+          MetaRight: "Meta",
+          AltLeft: "Alt",
+          AltRight: "Alt",
+          ContextMenu: "Menu",
+          Escape: "Esc",
+        };
+        if (code.startsWith("Key")) return code.slice(3);
+        if (code.startsWith("Digit")) return code.slice(5);
+        if (code.startsWith("F")) return code; // F1-F12
+        return special[code] || code;
+      }
+
+      // create keyboard buttons
+      const keyboardEl = document.getElementById("keyboard");
+      const flat = keyRows.flat();
+      flat.forEach((code) => {
+        const btn = document.createElement("button");
+        btn.className = "k";
+        // Some are larger
+        if (code === "Space") {
+          btn.classList.add("wide");
+          btn.style.gridColumn = "span 4";
+        }
+        if (
+          code.includes("Shift") ||
+          code.includes("Control") ||
+          code.includes("CapsLock")
+        )
+          btn.classList.add("large");
+        btn.setAttribute("data-code", code);
+        btn.setAttribute("aria-label", "Key " + labelFor(code));
+        btn.innerHTML = `<div style="font-weight:700">${labelFor(
+          code
+        )}</div><div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:4px">${code}</div>`;
+        keyboardEl.appendChild(btn);
+      });
+
+      // elements
+      const keyLabel = document.getElementById("keyLabel");
+      const val_key = document.getElementById("val_key");
+      const val_code = document.getElementById("val_code");
+      const val_keyCode = document.getElementById("val_keyCode");
+      const val_which = document.getElementById("val_which");
+      const val_charCode = document.getElementById("val_charCode");
+      const val_location = document.getElementById("val_location");
+      const val_mod = document.getElementById("val_mod");
+      const val_time = document.getElementById("val_time");
+      const chipPrintable = document.getElementById("chipPrintable");
+      const chipIsComposing = document.getElementById("chipIsComposing");
+      const chipCtrl = document.getElementById("chipCtrl");
+      const chipAlt = document.getElementById("chipAlt");
+      const chipShift = document.getElementById("chipShift");
+      const chipMeta = document.getElementById("chipMeta");
+      const historyEl = document.getElementById("history");
+      const histEmpty = document.getElementById("histEmpty");
+      const glow = document.getElementById("glow");
+
+      let history = [];
+
+      // helper - readable location
+      function locationName(loc) {
+        switch (loc) {
+          case 0:
+            return "Standard";
+          case 1:
+            return "Left";
+          case 2:
+            return "Right";
+          case 3:
+            return "Numpad";
+          default:
+            return loc;
+        }
+      }
+
+      // helper - printable?
+      function isPrintableKey(e) {
+        // heuristics: single-character keys or "Space"
+        if (e.key && e.key.length === 1) return true;
+        if (e.key === " " || e.key === "Spacebar" || e.code === "Space")
+          return true;
+        return false;
+      }
+
+      // handle event (KeyboardEvent)
+      function handleKeyEvent(e, source = "physical") {
+        // prevent focusing buttons on click interfering with keyboard
+        // update UI
+        const displayKey = e.key === " " ? "Space" : e.key || "Unidentified";
+        const label = String(displayKey);
+        keyLabel.textContent = label;
+        val_key.textContent = String(e.key);
+        val_code.textContent = String(e.code || "—");
+        val_keyCode.textContent =
+          typeof e.keyCode !== "undefined" ? e.keyCode : "—";
+        val_which.textContent = typeof e.which !== "undefined" ? e.which : "—";
+        val_charCode.textContent =
+          typeof e.charCode !== "undefined" ? e.charCode : "—";
+        val_location.textContent = locationName(e.location || 0);
+        val_mod.textContent =
+          `${e.ctrlKey ? "Ctrl " : ""}${e.altKey ? "Alt " : ""}${
+            e.shiftKey ? "Shift " : ""
+          }${e.metaKey ? "Meta" : ""}` || "—";
+        val_time.textContent = new Date().toLocaleTimeString();
+        chipPrintable.textContent =
+          "Printable: " + (isPrintableKey(e) ? "Ha" : "Yo‘q");
+        chipIsComposing.textContent =
+          "Composing: " + (e.isComposing ? "Ha" : "Yo‘q");
+        chipCtrl.textContent = "Ctrl: " + (e.ctrlKey ? "Ha" : "Yo‘q");
+        chipAlt.textContent = "Alt: " + (e.altKey ? "Ha" : "Yo‘q");
+        chipShift.textContent = "Shift: " + (e.shiftKey ? "Ha" : "Yo‘q");
+        chipMeta.textContent = "Meta: " + (e.metaKey ? "Ha" : "Yo‘q");
+
+        // glow and activate on-screen key matching e.code
+        document
+          .querySelectorAll(".k")
+          .forEach((el) => el.classList.remove("active"));
+        const targetBtn = document.querySelector(`.k[data-code="${e.code}"]`);
+        if (targetBtn) {
+          targetBtn.classList.add("active");
+          // briefly show glow
+          glow.classList.add("show");
+          setTimeout(() => glow.classList.remove("show"), 250);
+        }
+
+        // Push to history (keep last 50)
+        const item = {
+          time: new Date().toLocaleTimeString(),
+          key: String(e.key),
+          code: String(e.code),
+          keyCode: e.keyCode || null,
+          source,
+        };
+        history.unshift(item);
+        if (history.length > 50) history.pop();
+        renderHistory();
+      }
+
+      // render history
+      function renderHistory() {
+        historyEl.innerHTML = "";
+        if (history.length === 0) {
+          historyEl.appendChild(histEmpty);
+          return;
+        }
+        history.forEach((h) => {
+          const div = document.createElement("div");
+          div.className = "hist-item";
+          div.innerHTML = `<div style="font-weight:700">${escapeHtml(
+            String(h.key)
+          )} <span style="font-weight:500;color:var(--muted);font-size:12px">(${escapeHtml(
+            h.code
+          )})</span></div>
+                     <div style="text-align:right;color:var(--muted)">${escapeHtml(
+                       h.time
+                     )}<br><span style="font-size:12px">${escapeHtml(
+            h.source
+          )}</span></div>`;
+          historyEl.appendChild(div);
+        });
+      }
+
+      // escape (simple)
+      function escapeHtml(s) {
+        return String(s)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;");
+      }
+
+      // global keydown listener
+      window.addEventListener("keydown", function (e) {
+        // don't block user from typing inputs, but still capture
+        handleKeyEvent(e, "physical");
+      });
+
+      // Also support keyup to show alternates if needed (optional)
+      window.addEventListener("keyup", function (e) {
+        // small visual feedback: remove active state for matching on-screen key
+        const btn = document.querySelector(`.k[data-code="${e.code}"]`);
+        if (btn) setTimeout(() => btn.classList.remove("active"), 120);
+      });
+
+      // click on on-screen keys should synthesize a KeyboardEvent-like object
+      document.querySelectorAll(".k").forEach((btn) => {
+        btn.addEventListener("mousedown", (ev) => {
+          ev.preventDefault();
+          const code = btn.getAttribute("data-code");
+          // try to derive key from code
+          const key = prettyKeyFromCode(code);
+          const fake = {
+            key: key,
+            code: code,
+            keyCode: key.length === 1 ? key.charCodeAt(0) : 0,
+            which: key.length === 1 ? key.charCodeAt(0) : 0,
+            charCode: key.length === 1 ? key.charCodeAt(0) : 0,
+            location: code.includes("Left")
+              ? 1
+              : code.includes("Right")
+              ? 2
+              : code.includes("Numpad")
+              ? 3
+              : 0,
+            ctrlKey: false,
+            altKey: false,
+            shiftKey: false,
+            metaKey: false,
+            isComposing: false,
+          };
+          handleKeyEvent(fake, "onscreen");
+        });
+      });
+
+      // derive display key from code
+      function prettyKeyFromCode(code) {
+        if (code.startsWith("Key")) return code.slice(3);
+        if (code.startsWith("Digit")) return code.slice(5);
+        const map = {
+          Backquote: "`",
+          Minus: "-",
+          Equal: "=",
+          BracketLeft: "[",
+          BracketRight: "]",
+          Backslash: "\\",
+          Semicolon: ";",
+          Quote: "'",
+          Comma: ",",
+          Period: ".",
+          Slash: "/",
+          Space: " ",
+          Tab: "Tab",
+          Enter: "Enter",
+          Backspace: "Backspace",
+          CapsLock: "CapsLock",
+          ShiftLeft: "Shift",
+          ShiftRight: "Shift",
+          ControlLeft: "Control",
+          ControlRight: "Control",
+          AltLeft: "Alt",
+          AltRight: "Alt",
+          MetaLeft: "Meta",
+          MetaRight: "Meta",
+          ContextMenu: "Menu",
+          Escape: "Escape",
+        };
+        return map[code] || code;
+      }
+
+      // Allow clicking on big area to show hint (resets)
+      document.getElementById("visual").addEventListener("click", () => {
+        keyLabel.textContent = "Press any key";
+        val_key.textContent = "—";
+        val_code.textContent = "—";
+        val_keyCode.textContent = "—";
+        val_which.textContent = "—";
+        val_charCode.textContent = "—";
+        val_location.textContent = "—";
+        val_mod.textContent = "—";
+        val_time.textContent = "—";
+        chipPrintable.textContent = "Printable: —";
+        chipIsComposing.textContent = "Composing: —";
+        chipCtrl.textContent = "Ctrl: —";
+        chipAlt.textContent = "Alt: —";
+        chipShift.textContent = "Shift: —";
+        chipMeta.textContent = "Meta: —";
+      });
+
+      // initial render
+      renderHistory();
+
+      // Accessibility: trap focus visual keys when tabbing on keyboard
+      keyboardEl
+        .querySelectorAll(".k")
+        .forEach((k) => k.setAttribute("tabindex", "0"));
+
+      // Optional: Show some example keys on load
+      setTimeout(() => {
+        const fake = {
+          key: "A",
+          code: "KeyA",
+          keyCode: 65,
+          which: 65,
+          charCode: 65,
+          location: 0,
+          ctrlKey: false,
+          altKey: false,
+          shiftKey: false,
+          metaKey: false,
+          isComposing: false,
+        };
+        handleKeyEvent(fake, "demo");
+      }, 300);
+    </script>
   </body>
 </html>
