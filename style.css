@@ -10,7 +10,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 150vh;
   background: #f1f3f5;
 }
 
@@ -87,3 +87,7 @@ body {
   text-transform: uppercase;
 }
 
+
+body{
+
+}
