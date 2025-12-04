@@ -1,49 +1,90 @@
-//click
+// "use strict";
+// // console.log(age); //hiosting
 
-//dblclick
+// // var age = 12; //declare
+// // var age = 15; //redeclare
+// // age = 20; //resighn
 
-//submit
+// // console.log("====================================");
+// // console.log("====================================");
 
-// document.querySelector(".btn").addEventListener("", () => {
-//   alert("click types worked");
-// });
+// // console.log(oldAge);
 
-// window.addEventListener("scroll", (e) => {
-//   console.log(e);
-// });
+// // let oldAge = 20; //declare
+// // // let oldAge = 30; // redeclare no working
+// // oldAge = 40; // resign
+// // console.log("====================================");
+// // console.log("====================================");
+// // console.log(surName);
 
-// const input = document.querySelector(".name");
+// // const surName = "Farrux"; //declare
+// // const surName = "Sarvar" // redaclre
+// // surName = "Sunnat"; //resign
 
-// //form ,, input
+// // console.log("====================================");
+// // console.log("====================================");
 
-// input.addEventListener("focus", (e) => {
-//   console.log(e.target.value);
-// });
+// // const name = "Sarvar";
 
-window.addEventListener("keydown", (e) => {
-  console.log(e);
-});
+// // function sayHello() {
+// //   console.log("====================================");
+// //   console.log(name);
+// //   console.log("====================================");
+// // }
 
-let i = 0;
+// // sayHello();
 
-while (i < 6) {
-  if (i === 3) {
-    break;
-  }
-  i = i + 1;
-}
+// // const sayHello = () => {
+// //   const age = 20;
 
-console.log(i);
-// Expected output: 3
+// //   console.log(age);
+// // };
 
-let text = "";
+// // sayHello();
 
-for (let i = 0; i < 10; i++) {
-  if (i === 3) {
-    continue;
-  }
-  text = text + i;
-}
+// // console.log(age);
 
-console.log(text);
-// Expected output: "012456789"
+// // if (true) {
+// //   const age = "Salom";
+// // }
+
+// // const age = "String";
+
+// // let hasDriversLicence = false;
+// // let passTest = true;
+// // if (passTest) hasDriverLicence = true;
+// // if (hasDriversLicence) console.log("I can drive!");
+
+// // const fragment = document.createDocumentFragment();
+// // console.log("====================================");
+// // console.log(fragment);
+// // console.log("====================================");
+
+// // window.addEventListener('click' , ()=>{
+
+// // })
+
+// if (true) {
+//   const age = 34;
+
+//   function findNumber(number) {
+//     console.log("====================================");
+//     console.log(number);
+//     console.log("====================================");
+//   }
+
+//   findNumber();
+// }
+
+
+
+
+
+
+// function findNumber(number) {
+//   console.log("====================================");
+//   console.log(number);
+//   console.log("====================================");
+// }
+
+// window.addEventListener("click", findNumber());
